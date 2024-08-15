@@ -17,15 +17,14 @@ lde_pict_install: false
 
 lde_git_gitignore: |
   /.devcontainer/
-  /.devcontainer/host_vars/localhost.yml
   /.editorconfig
   /.env
   /.envrc
   /.erdconfig
   /.vscode/
   /.yardoc/
-  /bin/import.rb
-  /bin/export.rb
+  /.tbls.yml
+  /mkdocs.yml
   /lib/tasks/import.rake
   /lib/tasks/export.rake
   /doc/app/

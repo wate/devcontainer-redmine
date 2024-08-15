@@ -1,4 +1,14 @@
 ---
+- name: MkDocsの設定ファイルが存在するか確認
+  ansible.builtin.stat:
+    path: "{{ base_dir }}/mkdocs.yml"
+  register: mkdocs_config_stat_result
+- name: MkDocsの設定ファイルをコピー
+  ansible.builtin.copy:
+    src: files/mkdocs/mkdocs.yml
+    dest: "{{ base_dir }}/mkdocs.yml"
+    mode: "0644"
+  when: not mkdocs_config_stat_result.stat.exists
 - name: インデックスファイルの存在確認
   ansible.builtin.stat:
     path: "{{ document_base_dir }}/index.md"

@@ -2,7 +2,7 @@ Redmine開発環境
 =================
 
 ```
-git clone https://github.com/redmine/redmine redmine
+git clone git@github.com:redmine/redmine.git
 cd redmine
-git clone https://github.com/wate/devcontainer-redmine.git .devcontainer
+git clone git@github.com:wate/devcontainer-redmine.git .devcontainer
 ```

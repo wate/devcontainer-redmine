@@ -19,7 +19,7 @@
   },
   "remoteEnv": {
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
-    "WAKATIME_API_KEY": "${localEnv:WAKATIME_API_KEY}",
+    "WAKATIME_API_KEY": "${localEnv:WAKATIME_API_KEY}"
   },
   "forwardPorts": [3000, 8025],
   "postCreateCommand": "/usr/bin/bash .devcontainer/post_create.sh",
@@ -35,8 +35,7 @@
         "bierner.markdown-mermaid",
         "bierner.markdown-preview-github-styles",
         "DavidAnson.vscode-markdownlint",
-        "yzhang.markdown-all-in-one",
-        "wakatime.vscode-wakatime"
+        "yzhang.markdown-all-in-one"
       ],
       "settings": {
         "ansible.python.interpreterPath": "/usr/bin/python3",

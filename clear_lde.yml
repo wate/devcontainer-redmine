@@ -66,6 +66,8 @@
         - "{{ base_dir }}/.env"
         - "{{ base_dir }}/.envrc"
         - "{{ base_dir }}/.erdconfig"
+        - "{{ base_dir }}/.tbls"
+        - "{{ base_dir }}/mkdocs.yml"
         - "{{ base_dir }}/Gemfile.local"
         - "{{ base_dir }}/Gemfile.lock"
         - "{{ base_dir }}/.yardoc"
@@ -75,8 +77,6 @@
         - "{{ base_dir }}/config/database.yml"
         - "{{ base_dir }}/config/initializers/secret_token.rb"
         - "{{ base_dir }}/db/schema.rb"
-        - "{{ base_dir }}/bin/import.rb"
-        - "{{ base_dir }}/bin/export.rb"
         - "{{ base_dir }}/lib/tasks/import.rake"
         - "{{ base_dir }}/lib/tasks/export.rake"
     - name: 自動生成した各種ドキュメントを削除

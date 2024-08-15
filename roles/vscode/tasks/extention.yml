@@ -1,4 +1,9 @@
 ---
+- name: Copy extensions.json
+  ansible.builtin.copy:
+    src: extensions.json
+    dest: "{{ playbook_dir | dirname }}/.vscode/extensions.json"
+    mode: "0644"
 - name: Include extention setting tasks
   ansible.builtin.include_tasks:
     file: "{{ extention_setup_file }}"

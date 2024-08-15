@@ -13,6 +13,6 @@
       register: gitignore_result
     - name: .gitignoreの変更を無視するように設定
       ansible.builtin.command:
-        cmd: git update-index --skip-worktree .gitignore
+        cmd: git update-index --assume-unchanged .gitignore
         chdir: "{{ base_dir }}"
       when: gitignore_result is changed

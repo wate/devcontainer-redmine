@@ -1,0 +1,111 @@
+---
+site_name: Redmine開発ドキュメント
+##「sitemap.xml」を正しく出力するには「site_url」の設定を有効化する必要あり
+# site_url: http://doc.example.com/
+theme:
+  # https://squidfunk.github.io/mkdocs-material/
+  name: material
+  language: ja
+  palette:
+    primary: red
+  font:
+    # https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/
+    text: BIZ UDPGothic
+  features:
+    - navigation.tabs.sticky
+    - content.code.copy
+    # - content.tooltips
+    # - navigation.tabs
+    # - navigation.sections
+    # - navigation.expand
+    # - navigation.indexes
+    - search.suggest
+    - search.highlight
+    # - search.share
+docs_dir: doc
+# site_dir: site
+extra_javascript:
+  - assets/javascripts/extra.js
+extra_css:
+  - assets/stylesheets/extra.css
+## Excluded doc files
+## @see https://www.mkdocs.org/about/release-notes/#excluded-doc-files
+exclude_docs: |
+  rules
+  includes
+  SUMMARY.md
+  CHANGELOG
+  COPYING
+  INSTALL
+  README_FOR_APP
+  RUNNING_TESTS
+  UPGRADING
+markdown_extensions:
+  ## Python Markdown
+  ## @see https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/
+  ### Abbreviations
+  - abbr
+  ### Admonition
+  - admonition
+  ### Attribute Lists
+  - attr_list
+  ### Definition Lists
+  - def_list
+  ### Footnotes
+  - footnotes
+  ### Markdown in HTML
+  - md_in_html
+  ### Table of Contents
+  # - toc
+  ### Tables
+  - tables
+  ## Python Markdown Extensions
+  ## @see https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/
+  ### BetterEm
+  - pymdownx.betterem
+  ### Caret, Mark & Tilde
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  ### Details
+  - pymdownx.details
+  ### Highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+  ### InlineHilite
+  - pymdownx.inlinehilite
+  ### Keys
+  # - pymdownx.keys
+  ### SmartSymbols
+  # - pymdownx.smartsymbols
+  ### Snippets
+  - pymdownx.snippets:
+      base_path: doc
+      # auto_append:
+      #   - includes/abbreviations.md
+      #   - includes/links.md
+  ### Tabbed
+  # - pymdownx.tabbed
+  ### SuperFences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+plugins:
+  ## https://squidfunk.github.io/mkdocs-material/plugins/search/
+  - search:
+      lang: ja
+  ## https://squidfunk.github.io/mkdocs-material/plugins/tags/
+  - tags
+  ## https://github.com/blueswen/mkdocs-glightbox
+  - glightbox
+  ## https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
+  # - git-revision-date-localized:
+  #     type: iso_date
+  #     timezone: Asia/Tokyo
+  #     locale: ja
+  ## https://oprypin.github.io/mkdocs-section-index/
+  - section-index
+  ## https://oprypin.github.io/mkdocs-literate-nav/
+  - literate-nav:
+      # nav_file: SUMMARY.md

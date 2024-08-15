@@ -11,12 +11,12 @@
     - "{{ document_asset_font_dir }}"
     - "{{ document_asset_css_dir }}"
     - "{{ document_asset_js_dir }}"
-- name: Import webfont task
-  ansible.builtin.import_tasks:
-    file: webfont.yml
 - name: Import database document task
   ansible.builtin.import_tasks:
     file: database.yml
+- name: Import MkDocs task
+  ansible.builtin.import_tasks:
+    file: mkdocs.yml
 - name: Import ER diagram document task
   ansible.builtin.import_tasks:
     file: erd.yml
@@ -29,6 +29,6 @@
 - name: Import API document task
   ansible.builtin.import_tasks:
     file: api.yml
-- name: Import MkDocs task
+- name: Import webfont task
   ansible.builtin.import_tasks:
-    file: mkdocs.yml
+    file: webfont.yml

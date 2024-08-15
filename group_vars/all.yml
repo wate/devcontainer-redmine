@@ -1,6 +1,6 @@
 ---
 base_dir: "{{ playbook_dir | dirname }}"
-wakatime_api_key: lookup('env', 'WAKATIME_API_KEY')
+wakatime_api_key: "{{ lookup('env', 'WAKATIME_API_KEY') }}"
 
 # redmine_cfg:
 #   default:
