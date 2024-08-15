@@ -1,0 +1,34 @@
+---
+lde_tbls_version: latest
+
+lde_git_delta_install: true
+lde_git_delta_version: latest
+
+lde_d2_install: true
+lde_d2_version: latest
+
+lde_pandoc_install: false
+lde_pandoc_version: latest
+
+lde_runn_install: false
+lde_runn_version: latest
+
+lde_pict_install: false
+
+lde_git_gitignore: |
+  /.devcontainer/
+  /.devcontainer/host_vars/localhost.yml
+  /.editorconfig
+  /.env
+  /.envrc
+  /.erdconfig
+  /.vscode/
+  /.yardoc/
+  /bin/import.rb
+  /bin/export.rb
+  /lib/tasks/import.rake
+  /lib/tasks/export.rake
+  /doc/app/
+  /doc/assets/
+  /doc/schema/
+  /doc/*.md

@@ -1,0 +1,17 @@
+---
+- name: テーマディレクトリの存在確認
+  ansible.builtin.stat:
+    path: "{{ redmine_theme_dir }}"
+  register: theme_dir_result
+- name: テーマディレクトリ用変数を設定
+  ansible.builtin.set_fact:
+    redmine_theme_dir: "{{ redmine_root }}/{{ 'themes' if theme_dir_result.stat.exists else 'public/themes' }}"
+- name: テーマのインストール/更新
+  ansible.builtin.git:
+    repo: "{{ theme.value.repo }}"
+    dest: "{{ redmine_theme_dir }}/{{ theme.key }}"
+    version: "{{ theme.value.version | default('master') }}"
+  loop: "{{ redmine_themes | dict2items }}"
+  loop_control:
+    loop_var: theme
+    label: "{{ theme.key }}"

@@ -1,0 +1,77 @@
+---
+- name: マシン情報を取得
+  ansible.builtin.setup:
+    gather_subset:
+      - system
+      - architecture
+      - os_family
+      - distribution
+      - distribution_major_version
+      - distribution_release
+      - distribution_version
+  become: true
+- name: GPG鍵保存用ディレクトリを作成
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+  become: true
+- name: オートコンプリートファイルのインストール
+  ansible.builtin.import_tasks:
+    file: completion.yml
+- name: Gitの無視ファイルの設定を調整
+  ansible.builtin.import_tasks:
+    file: git.yml
+- name: Gemの設定を調整
+  ansible.builtin.import_tasks:
+    file: gem.yml
+- name: Git prompt for bashのインストール
+  ansible.builtin.import_tasks:
+    file: git_prompt_for_bash.yml
+- name: MariaDBのセットアップ
+  ansible.builtin.import_tasks:
+    file: mariadb.yml
+- name: mycliのセットアップ
+  ansible.builtin.import_tasks:
+    file: mycli.yml
+- name: MkDocsのセットアップ
+  ansible.builtin.import_tasks:
+    file: mkdocs.yml
+- name: direnvの設定
+  ansible.builtin.import_tasks:
+    file: direnv.yml
+- name: eza設定
+  ansible.builtin.import_tasks:
+    file: eza.yml
+- name: Editorconfigの設定
+  ansible.builtin.import_tasks:
+    file: editorconfig.yml
+- name: tblsのインストール
+  ansible.builtin.import_tasks:
+    file: tbls.yml
+  become: true
+- name: runnのインストール
+  ansible.builtin.import_tasks:
+    file: runn.yml
+  become: true
+  when: lde_runn_install
+- name: D2のインストール
+  ansible.builtin.import_tasks:
+    file: d2.yml
+  become: true
+  when: lde_d2_install
+- name: Pandocのインストール
+  ansible.builtin.import_tasks:
+    file: pandoc.yml
+  become: true
+  when: lde_pandoc_install
+- name: Git-deltaのインストール
+  ansible.builtin.import_tasks:
+    file: git_delta.yml
+  become: true
+  when: lde_git_delta_install
+- name: PICTのインストール
+  ansible.builtin.import_tasks:
+    file: pict.yml
+  become: true
+  when: lde_pict_install

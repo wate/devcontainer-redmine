@@ -1,0 +1,20 @@
+---
+- name: Rakeタスクの一覧を取得
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      bundle exec rake -T | grep -v "rake erd"  | grep -v "rake redmine:import"
+    chdir: "{{ base_dir }}"
+    executable: /usr/bin/bash
+  changed_when: false
+  failed_when: rake_task_list_command_result.rc > 1
+  register: rake_task_list_command_result
+  environment:
+    RAILS_ENV: "{{ redmine_rails_env }}"
+- name: タスク一覧のドキュメントを生成
+  ansible.builtin.template:
+    src: rake_task.md.j2
+    dest: "{{ document_base_dir }}/rake_task.md"
+    mode: "0644"
+  vars:
+    rake_tasks: "{{ rake_task_list_command_result.stdout_lines }}"

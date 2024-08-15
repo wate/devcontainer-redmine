@@ -1,0 +1,9 @@
+---
+- name: APIドキュメントを生成
+  ansible.builtin.command:
+    cmd: bundle exec rake yard
+    chdir: "{{ base_dir }}"
+    creates: "{{ document_base_dir }}/app"
+  environment:
+    RAILS_ENV: "{{ redmine_rails_env }}"
+    REDMINE_LANG: "{{ redmine_lang }}"

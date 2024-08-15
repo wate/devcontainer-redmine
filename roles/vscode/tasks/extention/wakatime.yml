@@ -1,0 +1,21 @@
+---
+- name: Update Wakatime extention setting
+  ansible.builtin.ini_file:
+    path: ~/.wakatime.cfg
+    section: settings
+    option: "{{ wakatime_cfg.key }}"
+    value: "{{ wakatime_cfg.value }}"
+    create: true
+    mode: "0600"
+  no_log: true
+  loop:
+    - key: api_key
+      value: "{{ wakatime_api_key }}"
+    - key: proxy
+      value: ""
+    - key: debug
+      value: false
+    - key: status_bar_enabled
+      value: true
+  loop_control:
+    loop_var: wakatime_cfg

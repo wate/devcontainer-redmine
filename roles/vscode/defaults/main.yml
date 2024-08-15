@@ -1,0 +1,29 @@
+---
+vscode_task_clear_lde_command: ansible-playbook .devcontainer/clear_lde.yml -i localhost, -c local
+vscode_task_post_create_command: bash .devcontainer/post_create.sh
+vscode_task_post_start_command: bash .devcontainer/post_start.sh
+
+vscode_tasks:
+  - label: Start Rails server
+    type: shell
+    command: bundle exec rails server -p 3000 -b 0.0.0.0
+  - label: Execute dev container post create command
+    type: shell
+    command: "{{ vscode_task_post_create_command }}"
+  - label: Execute dev container post start command
+    type: shell
+    command: "{{ vscode_task_post_start_command }}"
+  - label: Clear local development environment
+    type: shell
+    command: "{{ vscode_task_clear_lde_command }}"
+  - label: Reset local development environment
+    type: shell
+    command: >
+      {{ vscode_task_clear_lde_command }}
+      &&
+      {{ vscode_task_post_create_command }}
+      &&
+      {{ vscode_task_post_start_command }}
+  - label: Import setting
+    type: shell
+    command: IMPORT_DATA_FILE_NO_DELETE=1 bundle exec rake redmine:import

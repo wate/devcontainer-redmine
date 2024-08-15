@@ -1,0 +1,25 @@
+---
+- name: プラグインのインストール/更新
+  ansible.builtin.git:
+    repo: "{{ plugin.value.repo }}"
+    dest: "{{ redmine_plugin_dir }}/{{ plugin.key }}"
+    version: "{{ plugin.value.version | default('master') }}"
+  loop: "{{ redmine_plugins | dict2items }}"
+  loop_control:
+    loop_var: plugin
+    label: "{{ plugin.key }}"
+  register: redmine_plugin_update_result
+- name: プラグインのセットアップ
+  when: redmine_plugin_update_result is changed
+  environment:
+    RAILS_ENV: "{{ redmine_rails_env }}"
+    REDMINE_LANG: "{{ redmine_lang }}"
+  block:
+    - name: gemパッケージのインストール
+      ansible.builtin.command:
+        cmd: bundle install
+        chdir: "{{ redmine_root }}"
+    - name: データベースのマイグレーションを実行(プラグイン)
+      ansible.builtin.command:
+        cmd: bundle exec rake redmine:plugins:migrate
+        chdir: "{{ redmine_root }}"

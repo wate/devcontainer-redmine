@@ -1,0 +1,5 @@
+{{ document_erd_cfg.title }}
+==============================
+
+{% set erd_file_path = (document_asset_image_dir + '/' + (document_erd_cfg.filename | basename) + '.' + document_erd_cfg.filetype) | relpath(document_base_dir) %}
+![{{ document_erd_cfg.title }}]({{ erd_file_path }})

@@ -1,0 +1,16 @@
+---
+- name: pictのチェックアウト
+  ansible.builtin.git:
+    repo: https://github.com/microsoft/pict.git
+    dest: /usr/local/src/pict
+  register: pict_checkout_result
+- name: pictのビルド
+  ansible.builtin.command:
+    cmd: make
+    chdir: /usr/local/src/pict
+  when: pict_checkout_result is changed
+- name: シンボリックリンクを作成
+  ansible.builtin.file:
+    path: /usr/local/bin/pict
+    src: /usr/local/src/pict/pict
+    state: link

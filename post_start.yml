@@ -1,0 +1,10 @@
+- name: Execute post start task
+  hosts: all
+  become: false
+  gather_facts: false
+  tasks:
+    - name: 環境変数の有効化
+      ansible.builtin.command:
+        cmd: direnv allow
+        removes: "{{ playbook_dir | dirname }}/.envrc"
+        chdir: "{{ playbook_dir | dirname }}"

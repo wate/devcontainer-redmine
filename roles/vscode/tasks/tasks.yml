@@ -1,0 +1,24 @@
+---
+- name: Rakeタスクの一覧を取得
+  ansible.builtin.command:
+    cmd: bundle exec rake -T
+    chdir: "{{ playbook_dir | dirname }}"
+  changed_when: false
+  register: cmd_result
+- name: タスクリスト変数にRakeタスクを追加
+  ansible.builtin.set_fact:
+    vscode_tasks: "{{ vscode_tasks + [rake_task] }}"
+  vars:
+    rake_task:
+      label: "{{ (item.split('# ')[0] | trim)[5:] }}"
+      type: shell
+      command: "bundle exec {{ item.split('# ')[0] | trim }}"
+      detail: "{{ item.split('# ')[1] | trim }}"
+  loop: "{{ cmd_result.stdout_lines }}"
+  loop_control:
+    label: "{{ item.split('# ')[0] | trim }}"
+- name: tasks.jsonを生成
+  ansible.builtin.template:
+    src: tasks.json.j2
+    dest: "{{ playbook_dir | dirname }}/.vscode/tasks.json"
+    mode: "0644"

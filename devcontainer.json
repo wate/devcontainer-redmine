@@ -1,0 +1,63 @@
+// For format details, see https://aka.ms/devcontainer.json.
+{
+  "name": "Redmine development environment",
+  "dockerComposeFile": "compose.yml",
+  "service": "redmine",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      // "configureZshAsDefaultShell": false,
+      "installOhMyZsh": false,
+      "installOhMyZshConfig": false,
+      "upgradePackages": true,
+      // "username": "automatic",
+      // "userUid": "automatic",
+      // "userGid": "automatic",
+      // "nonFreePackages": false
+    }
+  },
+  "remoteEnv": {
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "WAKATIME_API_KEY": "${localEnv:WAKATIME_API_KEY}",
+  },
+  "forwardPorts": [3000, 8025],
+  "postCreateCommand": "/usr/bin/bash .devcontainer/post_create.sh",
+  "postStartCommand": "/usr/bin/bash .devcontainer/post_start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-extensions-pack",
+        "hediet.vscode-drawio",
+        "redhat.ansible",
+        "Terrastruct.d2",
+        "shd101wyy.markdown-preview-enhanced",
+        "bierner.markdown-mermaid",
+        "bierner.markdown-preview-github-styles",
+        "DavidAnson.vscode-markdownlint",
+        "yzhang.markdown-all-in-one",
+        "wakatime.vscode-wakatime"
+      ],
+      "settings": {
+        "ansible.python.interpreterPath": "/usr/bin/python3",
+        "ansible.ansible.path": "/home/vscode/.local/bin/ansible",
+        "ansible.validation.lint.path": "/home/vscode/.local/bin/ansible-lint",
+        "rubyLsp.indexing": {
+          "excludedPatterns": [
+            "**/test/**.rb",
+            "tmp",
+            "doc",
+            "public",
+            ".devcontainer"
+          ],
+          "includedPatterns": [
+            "**/bin/**",
+            "**/tasks/**.rake",
+            ".devcontainer/roles/redmine/files/**"
+          ]
+        }
+      }
+    },
+  },
+  "remoteUser": "vscode"
+}

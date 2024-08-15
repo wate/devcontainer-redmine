@@ -1,0 +1,18 @@
+---
+- name: ER図の設定ファイルを生成
+  ansible.builtin.blockinfile:
+    path: "{{ base_dir }}/.erdconfig"
+    content: "{{ document_erd_cfg | to_nice_yaml }}"
+    mode: "0644"
+    create: true
+  when: document_erd_cfg
+  register: erd_config_update_result
+- name: ER図を生成
+  ansible.builtin.command:
+    cmd: bundle exec rake erd
+    chdir: "{{ base_dir }}"
+  when: erd_config_update_result is changed
+- name: ドキュメントファイルを生成
+  ansible.builtin.template:
+    src: erd.md.j2
+    dest: "{{ document_base_dir }}/erd.md"

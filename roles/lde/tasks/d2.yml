@@ -1,0 +1,48 @@
+---
+- name: Set Install version variable
+  when: lde_d2_version | default('latest') == 'latest'
+  block:
+    - name: Set Github API request header
+      ansible.builtin.set_fact:
+        github_api_request_headers:
+          Accept: application/vnd.github+json
+    - name: Merge Github API Authorization request header
+      ansible.builtin.set_fact:
+        github_api_request_headers: "{{ github_api_request_headers | combine(merge_reauest_header) }}"
+      vars:
+        merge_reauest_header:
+          Authorization: Bearer {{ lookup('env', 'GITHUB_TOKEN') }}
+      when: lookup('env', 'GITHUB_TOKEN') | length > 0
+    - name: Get latest version
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/terrastruct/d2/releases/latest
+        headers: "{{ github_api_request_headers }}"
+      register: latest_releases
+    - name: Set lde_d2_version variable
+      ansible.builtin.set_fact:
+        lde_d2_version: "{{ latest_releases.json.tag_name }}"
+- name: Set architecture variable
+  ansible.builtin.set_fact:
+    d2_arch: "{{ d2_arch_types[ansible_facts['architecture']] }}"
+  vars:
+    d2_arch_types:
+      x86_64: amd64
+      aarch64: arm64
+- name: Create download directory
+  ansible.builtin.file:
+    path: /usr/local/src/d2
+    state: directory
+    mode: "0755"
+- name: Download d2
+  ansible.builtin.unarchive:
+    src: https://github.com/terrastruct/d2/releases/download/{{ lde_d2_version }}/d2-{{ lde_d2_version }}-linux-{{ d2_arch }}.tar.gz
+    dest: /usr/local/src/d2
+    extra_opts:
+      - --strip-components=1
+    remote_src: true
+  register: d2_unarchive_result
+- name: Install/update d2
+  ansible.builtin.command:
+    cmd: /usr/local/src/d2/scripts/install.sh
+    chdir: /usr/local/src/d2
+  when: d2_unarchive_result is changed

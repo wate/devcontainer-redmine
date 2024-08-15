@@ -1,0 +1,339 @@
+---
+- name: Import Redmine settings
+  environment:
+    RAILS_ENV: "{{ redmine_rails_env }}"
+    REDMINE_LANG: "{{ redmine_lang }}"
+  block:
+    - name: Copy redmine setting import task
+      ansible.builtin.copy:
+        src: import.rake
+        dest: "{{ base_dir }}/lib/tasks/import.rake"
+        mode: "0750"
+    - name: Create import admin setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/admin.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_admin | default({}) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_admin | default(false)
+    - name: Create import issue status setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/status.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_statuses | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_status | default(false)
+    - name: Create import tracker setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/tracker.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_trackers | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_tracker | default(false)
+    - name: Create import role setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/role.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_roles | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_role | default(false)
+    - name: Create import priority setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/priority.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_priorities | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_priority | default(false)
+    - name: Create import document category setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/document_category.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_document_categories | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_document_category | default(false)
+    - name: Create import time entry activity setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/time_entry_activity.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_time_entry_activities | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_time_entry_activity | default(false)
+    - name: Create import issue custom field setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/issue_custom_field.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_issue_custom_fields | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_issue_custom_field | default(false)
+    - name: Create import project custom field setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/project_custom_field.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_project_custom_fields | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_project_custom_field | default(false)
+    - name: Create import user custom field setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/user_custom_field.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_user_custom_fields | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_user_custom_field | default(false)
+    - name: Create import redmine setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/setting.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_settings | default({}) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_setting | default(false)
+    - name: Create import workflow setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/workflow.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_workflows | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_workflow | default(false)
+    - name: Create import field permission setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/field_permission.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_field_permissions | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_field_permission | default(false)
+    - name: Create import user setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/user.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_users | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_user | default(false)
+    - name: Create import group setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/group.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_groups | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_group | default(false)
+    - name: Create import issue query setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/issue_query.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_issue_queries | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_issue_query | default(false)
+    - name: Create import project query setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/project_query.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_project_queries | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_project_query | default(false)
+    - name: Create import time entry query setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/time_entry_query.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_time_entry_queries | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_time_entry_query | default(false)
+    - name: Create import project setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/project.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_projects | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_project | default(false)
+    - name: Create import attachment setting files
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_attachment | default(false)
+      block:
+        - name: Set tempolary upload file variables
+          ansible.builtin.set_fact:
+            uploaded_attachments: []
+        - name: Upload attachment files
+          ansible.builtin.include_tasks:
+            file: setting/upload_attachment.yml
+          loop: "{{ redmine_attachments | default([]) }}"
+          loop_control:
+            loop_var: attachment
+            label: "{{ attachment.file | basename }}"
+        - name: Create import attachment setting files
+          ansible.builtin.template:
+            src: import_data.yml.j2
+            dest: "{{ redmine_tmp_dir }}/attachment.yml"
+            mode: "0640"
+          vars:
+            redmine_import_data: "{{ uploaded_attachments | default([]) }}"
+    - name: Create import message customize setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/message_customize.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_message_customize | default({}) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_message_customize | default(false)
+    - name: Create import view customize setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/view_customize.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_view_customize | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_view_customize | default(false)
+    - name: Create import issue templates setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/issue_template.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_issue_templates | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_issue_template | default(false)
+    - name: Create import note templates setting files
+      ansible.builtin.template:
+        src: import_data.yml.j2
+        dest: "{{ redmine_tmp_dir }}/note_template.yml"
+        mode: "0640"
+      vars:
+        redmine_import_data: "{{ redmine_note_templates | default([]) }}"
+      when: >
+        generate_secret_token_result is changed
+        or
+        redmine_reimport_all | default(false)
+        or
+        redmine_reimport_note_template | default(false)
+    - name: Update Redmine settings
+      environment:
+        IMPORT_DATA_FILE_NO_DELETE: 1
+      ansible.builtin.command:
+        cmd: bundle exec rake redmine:import
+        chdir: "{{ redmine_root }}"

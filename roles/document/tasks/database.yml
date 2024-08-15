@@ -1,0 +1,41 @@
+---
+- name: データベースの接続設定の内容を変数に割り当て
+  ansible.builtin.set_fact:
+    db_name: "{{ redmine_database[redmine_rails_env].database }}"
+    db_host: "{{ redmine_database[redmine_rails_env].host }}"
+    db_port: "{{ redmine_database[redmine_rails_env].port | default(3306) }}"
+    db_user: "{{ redmine_database[redmine_rails_env].username }}"
+    db_password: "{{ redmine_database[redmine_rails_env].password }}"
+- name: tbls用の変数を設定
+  ansible.builtin.set_fact:
+    tbls_dsn: mariadb://{{ db_user }}:{{ db_password }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+    tbls_doc_path: "{{ document_schema_dir }}"
+- name: tbls用の環境変数を設定
+  ansible.builtin.blockinfile:
+    path: "{{ playbook_dir | dirname }}/.envrc"
+    marker: "# {mark} tbls ANSIBLE MANAGED BLOCK"
+    content: |
+      export TBLS_DSN={{ tbls_dsn }}
+      export TBLS_DOC_PATH={{ tbls_doc_path }}
+    mode: "0644"
+    create: true
+- name: データベースドキュメントを生成
+  ansible.builtin.command:
+    cmd: "{{ document_generate_database_document_command }}"
+    chdir: "{{ base_dir }}"
+    creates: "{{ tbls_doc_path }}"
+  environment:
+    TBLS_DSN: "{{ tbls_dsn }}"
+    TBLS_DOC_PATH: "{{ tbls_doc_path }}"
+- name: VSCodeのタスクにデータベースドキュメントの生成タスクを追加
+  ansible.builtin.set_fact:
+    vscode_tasks: "{{ vscode_tasks + [generate_db_doc_task] }}"
+  vars:
+    generate_db_doc_task:
+      label: Update database document
+      type: shell
+      command: >
+        TBLS_DSN="{{ tbls_dsn }}"
+        TBLS_DOC_PATH="{{ tbls_doc_path }}"
+        {{ document_generate_database_document_command }}
+  when: vscode_tasks is defined

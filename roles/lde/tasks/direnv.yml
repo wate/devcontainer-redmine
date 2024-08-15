@@ -1,0 +1,6 @@
+---
+- name: direnvの設定を追記
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} direnv ANSIBLE MANAGED BLOCK"
+    content: eval "$(direnv hook bash)"

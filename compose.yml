@@ -1,0 +1,47 @@
+services:
+  redmine:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    environment:
+      TZ: Asia/tokyo
+    depends_on:
+      - mariadb
+      - mailpit
+      # - redis
+      # - postgres
+      # - memcached
+  mariadb:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./mariadb/customize.cnf:/etc/mysql/mariadb.conf.d/customize.cnf
+      - ./mariadb/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    environment:
+      TZ: Asia/tokyo
+      MP_ENABLE_SPAMASSASSIN: postmark
+    ports:
+      - "8025:8025"
+  # redis:
+  #   image: redis:latest
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis-data:/data
+  # memcached:
+  #   image: memcached:latest
+  #   restart: unless-stopped
+  #   command: ["-m", "1024"]
+
+volumes:
+  mariadb-data:
+  redis-data:

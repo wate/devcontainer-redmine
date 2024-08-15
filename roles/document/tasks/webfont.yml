@@ -1,0 +1,72 @@
+---
+- name: フォント格納用ディレクトリを作成
+  ansible.builtin.file:
+    path: "{{ document_asset_font_dir }}"
+    state: directory
+    mode: "0755"
+- name: Webフォントの生成に必要なパッケージをインストール
+  ansible.builtin.apt:
+    name:
+      - fonttools
+      - sfnt2woff-zopfli
+      - woff2
+  become: true
+- name: サブセットフォント用のテキストファイルを生成
+  ansible.builtin.template:
+    src: subset_all.txt.j2
+    dest: "{{ document_subset_font_text_file_path }}"
+    mode: "0644"
+  vars:
+    subset_text_files:
+      - files/webfont/subset_alphanumeric.txt
+      - files/webfont/subset_symbol.txt
+      - files/webfont/subset_fullwidth_alphanumeric.txt
+      - files/webfont/subset_fullwidth_symbol.txt
+      - files/webfont/subset_hiragana.txt
+      - files/webfont/subset_katakana.txt
+      - files/webfont/subset_kanji.txt
+  register: subset_font_text_file_result
+- name: Webフォントファイルを生成
+  when: >
+    subset_font_text_file_result is changed
+    or
+    document_force_update_web_font
+  block:
+    - name: サブセットフォントを生成
+      ansible.builtin.command:
+        cmd: >
+          fonttools subset
+          --text-file={{ document_subset_font_text_file_path }}
+          --output-file={{ item.output_file | default(item.src | basename) }}
+          {{ item.src }}
+        chdir: "{{ document_asset_font_dir }}"
+      loop: "{{ document_webfont_files }}"
+      loop_control:
+        label: "{{ item.src | basename }}"
+    - name: Webフォント化するファイルの一覧を取得
+      ansible.builtin.find:
+        paths:
+          - "{{ document_asset_font_dir }}"
+        patterns:
+          - "*.ttf"
+          - "*.otf"
+      register: find_subset_result
+    - name: woffファイルを生成
+      ansible.builtin.command:
+        cmd: sfnt2woff-zopfli {{ item.path }}
+        chdir: "{{ document_asset_font_dir }}"
+      loop: "{{ find_subset_result.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"
+    - name: woff2ファイルを生成
+      ansible.builtin.command:
+        cmd: woff2_compress {{ item.path }}
+        chdir: "{{ document_asset_font_dir }}"
+      loop: "{{ find_subset_result.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"
+    - name: CSSファイルを生成
+      ansible.builtin.template:
+        src: fonts.css.j2
+        dest: "{{ document_asset_css_dir }}/fonts.css"
+        mode: "0644"

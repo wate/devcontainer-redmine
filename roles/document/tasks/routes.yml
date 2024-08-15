@@ -1,0 +1,19 @@
+---
+- name: ルーティング情報のドキュメントを生成
+  when: redmine_rails_env == 'development'
+  block:
+    - name: ルーティング情報を取得
+      ansible.builtin.command:
+        cmd: bundle exec rails routes
+        chdir: "{{ base_dir }}"
+      changed_when: false
+      register: rails_routes_command_result
+      environment:
+        RAILS_ENV: "{{ redmine_rails_env }}"
+    - name: ルーティング情報のドキュメントを生成
+      ansible.builtin.template:
+        src: routes.md.j2
+        dest: "{{ document_base_dir }}/routes.md"
+        mode: "0644"
+      vars:
+        redmine_routes: "{{ rails_routes_command_result.stdout_lines }}"

@@ -1,0 +1,52 @@
+---
+- name: Create BizinGothic font install directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ font_dir }}/BizinGothic"
+    - "{{ font_dir }}/BizinGothicDiscord"
+  register: bizingothic_font_dir_result
+- name: Install BizinGothic font
+  when: >
+    bizingothic_font_dir_result is changed
+    or
+    font_programming_font_force_install
+  block:
+    - name: Set Install version variable
+      when: font_bizingothic_version == 'latest'
+      block:
+        - name: Set Github API request header
+          ansible.builtin.set_fact:
+            github_api_request_headers:
+              Accept: application/vnd.github+json
+        - name: Merge Github API Authorization request header
+          ansible.builtin.set_fact:
+            github_api_request_headers: "{{ github_api_request_headers | combine(merge_reauest_header) }}"
+          vars:
+            merge_reauest_header:
+              Authorization: Bearer {{ lookup('env', 'GITHUB_TOKEN') }}
+          when: lookup('env', 'GITHUB_TOKEN') | length > 0
+        - name: Get latest release
+          ansible.builtin.uri:
+            url: https://api.github.com/repos/{{ font_bizingothic_repo }}/releases/latest
+            headers: "{{ github_api_request_headers }}"
+          register: latest_releases
+        - name: Set package version variable
+          ansible.builtin.set_fact:
+            font_bizingothic_version: "{{ latest_releases.json.tag_name }}"
+    - name: Install BizinGothic font file
+      ansible.builtin.unarchive:
+        src: https://github.com/{{ font_bizingothic_repo }}/releases/download/{{ font_bizingothic_version }}/BizinGothic_{{ font_bizingothic_version }}.zip
+        dest: "{{ font_dir }}/BizinGothic"
+        extra_opts:
+          - -j
+        remote_src: true
+    - name: Install BizinGothic Discord font file
+      ansible.builtin.unarchive:
+        src: https://github.com/{{ font_bizingothic_repo }}/releases/download/{{ font_bizingothic_version }}/BizinGothicDiscord_{{ font_bizingothic_version }}.zip
+        dest: "{{ font_dir }}/BizinGothicDiscord"
+        extra_opts:
+          - -j
+        remote_src: true

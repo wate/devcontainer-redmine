@@ -1,0 +1,17 @@
+---
+- name: オートコンプリート設定ファイルのダウンロードディレクトリを作成
+  ansible.builtin.file:
+    path: ~/.local/share/bash-completion/completions
+    state: directory
+    mode: "0755"
+- name: オートコンプリートファイルのインストール
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/mernen/completion-ruby/main/completion-{{ item }}
+    dest: ~/.local/share/bash-completion/completions/{{ item }}
+    mode: "0644"
+  loop:
+    - ruby
+    - gem
+    - bundle
+    - rake
+    - rails

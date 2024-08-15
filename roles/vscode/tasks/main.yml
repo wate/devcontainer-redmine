@@ -1,0 +1,15 @@
+---
+- name: VSCodeの設定ディレクトリを作成
+  ansible.builtin.file:
+    path: "{{ playbook_dir | dirname }}/.vscode"
+    state: directory
+    mode: "0755"
+- name: Import extention setting task
+  ansible.builtin.import_tasks:
+    file: extention.yml
+- name: Import launch task
+  ansible.builtin.import_tasks:
+    file: launch.yml
+- name: Import generate tasks.json task
+  ansible.builtin.import_tasks:
+    file: tasks.yml

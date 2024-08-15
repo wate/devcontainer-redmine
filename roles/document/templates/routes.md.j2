@@ -1,0 +1,27 @@
+ルーティング情報
+===================================
+{% set col_verd_index = redmine_routes[0].find('Verb') %}
+{% set col_uri_pattern_index = redmine_routes[0].find('URI Pattern') %}
+{% set col_controller_action = redmine_routes[0].find('Controller#Action') %}
+{% set col_prefix_width = col_verd_index %}
+{% set col_verb_width = col_uri_pattern_index - col_verd_index %}
+{% set col_uri_pattern_width = col_controller_action - col_uri_pattern_index + 2 %}
+{% set col_controller_action_width = (redmine_routes | map('length') | max) - col_controller_action + 2 %}
+{% set col_prefix_pad_width = col_prefix_width - ('Prefix' | length) %}
+{% set col_verb_pad_width = col_verb_width - ('HTTP Method' | length) %}
+{% set col_uri_pattern_pad_width = col_uri_pattern_width - ('URI Pattern' | length) %}
+{% set col_controller_action_pad_width = col_controller_action_width - ('Controller#Action' | length) %}
+
+| HTTP Method{{ ' ' * col_verb_pad_width }} | URI Pattern{{ ' ' * col_uri_pattern_pad_width }} | Controller#Action{{ ' ' * col_controller_action_pad_width }} | Prefix{{ ' ' * col_prefix_width }} |
+|:{{ '-' * col_verb_width }}:| {{ '-' * col_uri_pattern_width }} | {{ '-' * col_controller_action_width }} | {{ '-' * col_prefix_width }} |
+{% for route in redmine_routes[1:] %}
+{% set route_prefix = route[0:col_verd_index] | trim %}
+{% set route_verb = route[col_verd_index:col_uri_pattern_index] | replace('|', '/') | trim %}
+{% set route_uri_pattern = route[col_uri_pattern_index:col_controller_action] | trim %}
+{% set route_controller_action = route[col_controller_action:] | trim %}
+{% set prefix_pad_width = col_prefix_width - (route_prefix | length) %}
+{% set verb_pad_width = col_verb_width - (route_verb | length) %}
+{% set uri_pattern_pad_width = col_uri_pattern_width - (route_uri_pattern | length) - 2 %}
+{% set controller_action_pad_width = col_controller_action_width - (route_controller_action | length) - 2 %}
+| {{ route_verb }}{{ ' ' * verb_pad_width }} | `{{ route_uri_pattern }}`{{ ' ' * uri_pattern_pad_width }} | `{{ route_controller_action }}`{{ ' ' * controller_action_pad_width }} | {{ route_prefix }}{{ ' ' * prefix_pad_width }} |
+{% endfor %}

@@ -1,0 +1,91 @@
+@charset "UTF-8";
+/* Webフォント化したプログラミング向けフォント定義の読み込み */
+@import url("./fonts.css");
+
+/* ソースコードブロック部分のフォントをプログラミング向けフォントに設定 */
+:root {
+  --md-code-font: "CodeFontBD";
+}
+
+/**
+ * メインカラムの幅を調整
+ */
+.md-grid {
+  max-width: 80rem;
+}
+
+/**
+ * 最終更新日を右上に表示するためのスタイル
+ *
+ * git-revision-date-localized
+ * https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
+ */
+.md-content__inner {
+  position: relative;
+}
+
+.md-source-file {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/**
+ * リンクとツールチップ表示
+ */
+[dir=ltr] .md-typeset a[href="#"],
+[dir=ltr] .md-typeset a[href=""],
+[dir=ltr] .md-typeset abbr {
+  text-decoration: none;
+}
+
+[dir=ltr] .md-typeset a[title] {
+  position: relative;
+  text-decoration: underline dotted #707072;
+}
+
+[dir=ltr] .md-typeset a[title][href="#"],
+[dir=ltr] .md-typeset a[title][href=""] {
+  color: #3f475d;
+}
+
+[dir=ltr] .md-typeset a[title]::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: block;
+  padding-block: 0.4em 0.5em;
+  padding-inline: 0.6em;
+  font-size: 14px;
+  line-height: 1;
+  color: #555;
+  white-space: nowrap;
+  visibility: hidden;
+  content: attr(title);
+  background-color: #ddd;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s 0.4s, translate 0.3s 0.4s;
+  translate: 0 -90%;
+}
+
+@media (any-hover: hover) {
+  [dir=ltr] .md-typeset a[title]:hover {
+    cursor: help;
+  }
+
+  [dir=ltr] .md-typeset a[title]:hover::after {
+    visibility: visible;
+    opacity: 1;
+    translate: 0 -140%;
+  }
+}
+
+[dir=ltr] .md-typeset a[title=""] {
+  text-decoration: none;
+}
+
+[dir=ltr] .md-typeset a[title=""]::after {
+  all: unset;
+}

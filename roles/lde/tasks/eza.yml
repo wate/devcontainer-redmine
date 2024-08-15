@@ -1,0 +1,6 @@
+---
+- name: ezaの設定を追記
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} eza ANSIBLE MANAGED BLOCK"
+    content: alias ls="eza --git --header"

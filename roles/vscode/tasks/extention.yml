@@ -1,0 +1,7 @@
+---
+- name: Include extention setting tasks
+  ansible.builtin.include_tasks:
+    file: "{{ extention_setup_file }}"
+  loop: "{{ lookup('ansible.builtin.fileglob', 'extention/*.yml', wantlist=True) }}"
+  loop_control:
+    loop_var: extention_setup_file

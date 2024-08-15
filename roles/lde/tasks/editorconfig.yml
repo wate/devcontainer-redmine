@@ -1,0 +1,5 @@
+---
+- name: EditorConfigの設定ファイルをコピー
+  ansible.builtin.copy:
+    src: editorconfig
+    dest: "{{ base_dir }}/.editorconfig"

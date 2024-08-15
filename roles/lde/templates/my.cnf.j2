@@ -1,0 +1,9 @@
+[mysql]
+auto-rehash
+
+[client]
+database={{ redmine_database[redmine_rails_env].database }}
+user={{ redmine_database[redmine_rails_env].username }}
+password={{ redmine_database[redmine_rails_env].password }}
+host={{ redmine_database[redmine_rails_env].host }}
+default-character-set={{ redmine_database[redmine_rails_env].encoding }}

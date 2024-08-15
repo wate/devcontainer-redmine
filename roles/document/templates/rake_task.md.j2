@@ -1,0 +1,17 @@
+Rakeタスク一覧
+==========================
+{% for rake_task in rake_tasks %}
+{% set rale_task_split = rake_task.split('#') %}
+{% set task_command = rale_task_split[0] | trim %}
+{% set task_name = task_command | replace('rake ', '') %}
+{% set task_description = rale_task_split[1] | trim %}
+
+{{ task_name }}
+----------------------------
+
+{{ task_description }}
+
+```sh
+bundle exec {{ task_command }}
+```
+{% endfor %}

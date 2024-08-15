@@ -1,0 +1,29 @@
+- name: Execute post create task
+  hosts: all
+  become: false
+  gather_facts: false
+  pre_tasks:
+    - name: マシン情報を取得
+      ansible.builtin.setup:
+        gather_subset:
+          - system
+      become: true
+      tags: always
+  roles:
+    - role: lde
+      when: ansible_facts.system == 'Linux'
+      tags: role_lde
+    - role: font
+      become: true
+      tags: role_font
+      when: ansible_facts.system == "Linux"
+    - role: redmine
+      tags: role_redmine
+      when: ansible_facts.system == "Linux"
+    - role: document
+      when: ansible_facts.system == "Linux"
+      tags: role_document
+    - role: vscode
+      when: ansible_facts.system == "Linux"
+      tags: role_vscode
+  tasks: []

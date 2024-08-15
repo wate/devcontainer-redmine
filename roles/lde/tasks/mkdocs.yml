@@ -1,0 +1,16 @@
+---
+- name: MkDocsのインストール
+  community.general.pipx:
+    name: mkdocs
+    state: install
+    install_deps: true
+- name: MkDocsの各種プラグインをインストール
+  community.general.pipx:
+    name: mkdocs
+    state: inject
+    inject_packages:
+      - mkdocs-material
+      - mkdocs-git-revision-date-localized-plugin
+      - mkdocs-glightbox
+      - mkdocs-section-index
+      - mkdocs-literate-nav

@@ -1,0 +1,75 @@
+---
+## 動作モード
+redmine_rails_env: development
+
+## 言語
+redmine_lang: ja
+
+## プラグイン
+redmine_plugins: {}
+#   view_customize:
+#     repo: https://github.com/onozaty/redmine-view-customize.git
+#     version: master
+#   redmine_issue_templates:
+#     repo: https://github.com/agileware-jp/redmine_issue_templates.git
+#     version: master
+
+## テーマ
+redmine_themes: {}
+#   PurpleMine2:
+#     repo: https://github.com/mrliptontea/PurpleMine2.git
+#     version: master
+
+## Bundlerの設定
+redmine_bundler_cfg:
+  # BUNDLE_PATH: "~/vendor/bundle"
+  BUNDLE_DISABLE_SHARED_GEMS: "true"
+  BUNDLE_RETRY: 3
+  # BUNDLE_WITHOUT: development:test
+
+## 追加でインストールするgemパッケージ
+redmine_gemfile_local: |
+  gem 'rails-erd'
+  gem 'ruby-lsp'
+  gem 'ruby-lsp-rails'
+
+## Redmineの追加環境設定
+redmine_additional_environment: |
+  config.logger = Logger.new('/dev/null')
+  config.paths['app/views'] = ['views', 'app/views']
+
+## Redmineの設定
+redmine_cfg:
+  default:
+    email_delivery:
+      delivery_method: :smtp
+      smtp_settings:
+        address: mailpit
+        port: 1025
+
+## 初期データの読み込みをスキップするか否か
+redmine_skip_load_default_data: false
+
+## データベースの接続設定
+redmine_database:
+  development:
+    adapter: mysql2
+    database: app_dev
+    host: mariadb
+    username: app_dev
+    password: app_dev_password
+    encoding: utf8mb4
+  test:
+    adapter: mysql2
+    database: app_test
+    host: mariadb
+    username: app_test
+    password: app_test_password
+    encoding: utf8mb4
+  production:
+    adapter: mysql2
+    database: app_prod
+    host: mariadb
+    username: app_prod
+    password: app_prod_password
+    encoding: utf8mb4

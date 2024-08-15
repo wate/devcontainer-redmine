@@ -1,0 +1,26 @@
+---
+- name: Set Install version variable
+  when: lde_git_delta_version | default('latest') == 'latest'
+  block:
+    - name: Set Github API request header
+      ansible.builtin.set_fact:
+        github_api_request_headers:
+          Accept: application/vnd.github+json
+    - name: Merge Github API Authorization request header
+      ansible.builtin.set_fact:
+        github_api_request_headers: "{{ github_api_request_headers | combine(merge_reauest_header) }}"
+      vars:
+        merge_reauest_header:
+          Authorization: Bearer {{ lookup('env', 'GITHUB_TOKEN') }}
+      when: lookup('env', 'GITHUB_TOKEN') | length > 0
+    - name: Get latest release
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/dandavison/delta/releases/latest
+        headers: "{{ github_api_request_headers }}"
+      register: latest_releases
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        lde_git_delta_version: "{{ latest_releases.json.tag_name }}"
+- name: Install delta
+  ansible.builtin.apt:
+    deb: https://github.com/dandavison/delta/releases/download/{{ lde_git_delta_version }}/git-delta_{{ lde_git_delta_version }}_amd64.deb

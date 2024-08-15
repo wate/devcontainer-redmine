@@ -1,0 +1,4 @@
+- name: launch.jsonをコピー
+  ansible.builtin.copy:
+    src: launch.json
+    dest: "{{ playbook_dir | dirname }}/.vscode/launch.json"

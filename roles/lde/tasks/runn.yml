@@ -1,0 +1,33 @@
+---
+- name: Set Install version variable
+  when: lde_runn_version | default('latest') == 'latest'
+  block:
+    - name: Set Github API request header
+      ansible.builtin.set_fact:
+        github_api_request_headers:
+          Accept: application/vnd.github+json
+    - name: Merge Github API Authorization request header
+      ansible.builtin.set_fact:
+        github_api_request_headers: "{{ github_api_request_headers | combine(merge_reauest_header) }}"
+      vars:
+        merge_reauest_header:
+          Authorization: Bearer {{ lookup('env', 'GITHUB_TOKEN') }}
+      when: lookup('env', 'GITHUB_TOKEN') | length > 0
+    - name: Get latest release
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/k1LoW/runn/releases/latest
+        headers: "{{ github_api_request_headers }}"
+      register: latest_releases
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        lde_runn_version: "{{ latest_releases.json.tag_name }}"
+- name: Set architecture variable
+  ansible.builtin.set_fact:
+    runn_arch: "{{ runn_arch_types[ansible_facts['architecture']] }}"
+  vars:
+    runn_arch_types:
+      x86_64: amd64
+      aarch64: arm64
+- name: Install tbls
+  ansible.builtin.apt:
+    deb: https://github.com/k1LoW/runn/releases/download/{{ lde_runn_version }}/runn_{{ lde_runn_version[1:] }}-1_{{ runn_arch }}.deb

@@ -1,0 +1,9 @@
+---
+- name: MySQL/MariaDBのデータベースの接続設定ファイルを生成
+  ansible.builtin.template:
+    src: my.cnf.j2
+    dest: ~/.my.cnf
+    mode: "0644"
+  when:
+    - redmine_database is defined
+    - redmine_rails_env is defined

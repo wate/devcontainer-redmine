@@ -1,0 +1,8 @@
+---
+redmine_root: "{{ base_dir | default(playbook_dir | dirname) }}"
+redmine_bin_dir: "{{ redmine_root }}/bin"
+redmine_config_dir: "{{ redmine_root }}/config"
+redmine_tmp_dir: "{{ redmine_root }}/tmp"
+redmine_attachment_dir: "{{ redmine_root }}/files"
+redmine_theme_dir: "{{ redmine_root }}/themes"
+redmine_plugin_dir: "{{ redmine_root }}/plugins"

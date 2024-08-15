@@ -1,0 +1,20 @@
+---
+- name: gemの設定ファイルをコピー
+  ansible.builtin.copy:
+    src: gemrc
+    dest: ~/.gemrc
+    mode: "0644"
+- name: gemの環境情報を取得
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      gem environment | grep "USER INSTALLATION DIRECTORY"
+    executable: /bin/bash
+  register: gem_environment_result
+  changed_when: false
+  failed_when: gem_environment_result.rc > 1
+- name: パスにgemのユーザーインストール先ディレクトリを追記
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} gem ANSIBLE MANAGED BLOCK"
+    content: "export PATH=$PATH:{{ gem_environment_result.stdout_lines[0].split(': ')[1] + '/bin' }}"

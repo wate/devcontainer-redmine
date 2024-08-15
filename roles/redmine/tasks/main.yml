@@ -1,0 +1,14 @@
+# code: language=ansible
+---
+- name: Import setup task
+  ansible.builtin.import_tasks:
+    file: setup.yml
+- name: Import theme task
+  ansible.builtin.import_tasks:
+    file: theme.yml
+- name: Import plugin task
+  ansible.builtin.import_tasks:
+    file: plugin.yml
+- name: Import setting task
+  ansible.builtin.import_tasks:
+    file: setting.yml

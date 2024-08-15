@@ -1,0 +1,1761 @@
+---
+base_dir: "{{ playbook_dir | dirname }}"
+wakatime_api_key: lookup('env', 'WAKATIME_API_KEY')
+
+# redmine_cfg:
+#   default:
+#     sudo_mode: true
+#     sudo_mode_timeout: 15
+
+## --------------------
+## プラグイン
+## --------------------
+redmine_plugins: {}
+  # view_customize:
+  #   repo: https://github.com/onozaty/redmine-view-customize.git
+  #   version: master
+  # redmine_issue_templates:
+  #   repo: https://github.com/agileware-jp/redmine_issue_templates.git
+  #   version: master
+  # redmine_message_customize:
+  #   repo: https://github.com/farend/redmine_message_customize.git
+  #   version: master
+  # redmine_messenger:
+  #   repo: https://github.com/alphanodes/redmine_messenger.git
+  #   version: main
+
+## --------------------
+## テーマ
+## --------------------
+redmine_themes: {}
+  # farend_fancy:
+  #   repo: https://github.com/farend/redmine_theme_farend_fancy.git
+  #   version: support-propshaft
+  # farend_basic:
+  #   repo: https://github.com/farend/redmine_theme_farend_basic.git
+  #   version: support-propshaft
+  # bleuclair:
+  #   repo: https://github.com/farend/redmine_theme_farend_bleuclair.git
+  #   version: support-propshaft
+
+## --------------------
+## 全データの再インポート
+## (※「redmine_admin」以外の全て)
+## --------------------
+# redmine_reimport_all: true
+
+## --------------------
+## デフォルトのシステム管理者
+## --------------------
+# redmine_reimport_admin: true
+redmine_admin:
+  login: admin
+  firstname: 管理者
+  lastname: システム
+  mail: admin@example.com
+  language: ja
+  password: password
+  must_change_passwd: false
+  mail_notification: none
+
+## --------------------
+## チケットのステータス
+## --------------------
+# redmine_reimport_status: true
+redmine_statuses:
+  - name: 未対応
+    id: 1
+    position: 1
+    ## この項目はテーブルには存在しません、以下の内容はWellcomeメッセージに出力するテキストです
+    description: |
+      何も対応を行っていない状態を表しています
+  - name: 対応中
+    id: 2
+    position: 2
+    description: |
+      対応を行っている最中の状態を表しています
+  - name: 対応済み
+    id: 3
+    position: 3
+    description: |
+      いったん対応が終わった状態を表しています。
+      ただし、検証などは完了していないため、チケット自体は完了していない状態を表しています。
+  - name: 確認待ち
+    position: 4
+    description: |
+      不明点の確認を行っている状態を表しています。
+  - name: フィードバック
+    position: 5
+    description: |
+      質問に対する回答を行った状態を表しています。
+  - name: 経過観察
+    position: 6
+    description: |
+      * タスク：実装および検証は終わったが、しばらく様子見が必要といった状態を表しています
+          * 例：機能の実装後にABテストを実施している
+      * 不具合：何らかの理由により様子見を行っている状態を表しています。
+          * 例：対応を行う必要があるが、事象が再現しないため原因が特定しきれない
+      * 運用保守：何らかの理由により様子見を行っている状態を表しています。
+          * 例：依存パッケージのアップデートがあったが、影響範囲の確認が必要になるため適用を様子見している
+  - name: 保留
+    position: 7
+    description: |
+      何らかの理由により対応を保留にしている状態を表しています。
+      ※「種別」が「要望」以外のチケットについては、「管理者」権限を有する人のみ設定できます。
+  - name: 完了
+    id: 5
+    position: 8
+    description: |
+      チケットの対応がすべて終わり対応が完了した状態を表しています。
+  - name: 破棄
+    id: 6
+    position: 9
+    description: |
+      何らかの理由によりチケットの対応を行わずに終了した状態を表しています。
+
+## --------------------
+## トラッカー
+## --------------------
+# redmine_reimport_tracker: true
+redmine_trackers:
+  - name: 要望
+    description: |
+      対応するかどうかが決まっていないチケットです。
+      思いついたことなどはこの種別を設定し気軽にチケットとして登録しましょう。
+    position: 1
+    enabled_standard_fields:
+      - description
+      - assigned_to_id
+      - start_date
+      - due_date
+      - category_id
+      - parent_issue_id
+    is_in_roadmap: false
+    copy_workflow_from: タスク
+  - name: タスク
+    description: |
+      対応することが確定したチケットです。
+      主に機能追加や機能改善はこの種別を設定します。
+    id: 2
+    position: 2
+  - name: 不具合
+    id: 1
+    description: |
+      不具合に関するチケットです。
+      システムの不具合だけでなく、見た目の表示崩れなどもこの種別を設定します。
+    position: 3
+  - name: 運用保守
+    id: 3
+    description: |
+      運用保守作業に関するチケットです。
+      依存パッケージの更新やセキュリティアップデート、技術的負債の解消、
+      ドキュメントのメンテナンスといった内容はこの種別を設定します。
+    position: 4
+    is_in_roadmap: false
+  - name: 問い合わせ
+    description: |
+      他部署などからの問い合わせに関するチケットです。
+      なるべく速やかに質問者(登録者)に回答をしてあげましょう。
+    position: 5
+    enabled_standard_fields:
+      - description
+      - assigned_to_id
+      - start_date
+      - due_date
+    is_in_roadmap: false
+    copy_workflow_from: タスク
+  - name: その他
+    description: |
+      メイン業務以外の間接業務はこの種別を設定してください。
+    position: 6
+    enabled_standard_fields:
+      - description
+      - assigned_to_id
+      - start_date
+      - due_date
+    is_in_roadmap: false
+    copy_workflow_from: タスク
+
+## --------------------
+## ロール
+## --------------------
+# redmine_reimport_role: true
+redmine_roles:
+  - name: 管理者
+    id: 3
+    ## 権限
+    append_permissions:
+      ## チケットテンプレート
+      # テンプレートの編集
+      - edit_issue_templates
+      # テンプレートの表示
+      - show_issue_templates
+      # テンプレートの管理
+      - manage_issue_templates
+      ## Additionals
+      # ダッシュボードの共有
+      - share_dashboards
+      # ダッシュボードの保存
+      - save_dashboards
+      ## ダッシュボード
+      # ダッシュボードの表示
+      - view_dashboards
+      # ダッシュボードの設定
+      - configure_dashboards
+      # 終了済みチケットの作業時間の入力
+      - log_time_on_closed_issues
+      ## Webhooks
+      # Manage hook
+      - manage_hook
+      ## DMSF(ドキュメント管理)
+      # ダウンロード履歴の表示
+      - view_dmsf_file_revision_accesses
+      # リビジョン履歴の表示
+      - view_dmsf_file_revisions
+      # ファイルの一覧
+      - view_dmsf_folders
+      # ユーザー設定
+      - user_preferences
+      # ファイルの表示
+      - view_dmsf_files
+      # 文書をメールで送信
+      - email_documents
+      # フォルダ操作
+      - folder_manipulation
+      # ファイル操作
+      - file_manipulation
+      # ファイルの削除
+      - file_delete
+      # ファイルの強制ロック解除
+      - force_file_unlock
+      # ファイルの承認
+      - file_approval
+      # ワークフローの管理
+      - manage_workflows
+  - name: 開発者
+    id: 4
+    append_permissions:
+      ## プロジェクト
+      # プロジェクトの編集
+      - edit_project
+      # モジュールの選択
+      - select_project_modules
+      ## チケットトラッキング
+      # チケットのコピー
+      - copy_issues
+      # チケットのインポート
+      - import_issues
+      # 自分が追加したチケットの編集
+      - edit_own_issues
+      # 自分が追加したチケットのプライベート設定
+      - set_own_issues_private
+      # 自分が追加したコメントの編集
+      - edit_own_issue_notes
+      ## 文書
+      # 文書の追加
+      - add_documents
+      # 文書の編集
+      - edit_documents
+      # 文書の削除
+      - delete_documents
+      ## 時間管理
+      # 自分の作業時間の編集
+      - edit_own_time_entries
+      # 作業時間のインポート
+      - import_time_entries
+      ## Wiki
+      # Wikiページ名の変更
+      - rename_wiki_pages
+      # Wikiページの保護
+      - protect_wiki_pages
+      # 添付ファイルの削除
+      - delete_wiki_pages_attachments
+      ## チケットテンプレート
+      # テンプレートの編集
+      - edit_issue_templates
+      # テンプレートの表示
+      - show_issue_templates
+      # テンプレートの管理
+      - manage_issue_templates
+      ## Additionals
+      # ダッシュボードの保存
+      - save_dashboards
+      ## ダッシュボード
+      # ダッシュボードの表示
+      - view_dashboards
+      # 終了済みチケットの作業時間の入力
+      - log_time_on_closed_issues
+      ## DMSF(ドキュメント管理)
+      # ダウンロード履歴の表示
+      - view_dmsf_file_revision_accesses
+      # リビジョン履歴の表示
+      - view_dmsf_file_revisions
+      # ファイルの一覧
+      - view_dmsf_folders
+      # ユーザー設定
+      - user_preferences
+      # ファイルの表示
+      - view_dmsf_files
+      # 文書をメールで送信
+      - email_documents
+      # フォルダ操作
+      - folder_manipulation
+      # ファイル操作
+      - file_manipulation
+      # ファイルの削除
+      - file_delete
+      # ファイルの承認
+      - file_approval
+  - name: 報告者
+    id: 5
+    ## 権限
+    append_permissions:
+      ## チケットテンプレート
+      # テンプレートの表示
+      - show_issue_templates
+      ## チケットトラッキング
+      # 自分が追加したチケットの編集
+      - edit_own_issues
+      # 自分が追加したコメントの編集
+      - edit_own_issue_notes
+      ## 時間管理
+      # 自分の作業時間の編集
+      - edit_own_time_entries
+      ## DMSF(ドキュメント管理)
+      # ダウンロード履歴の表示
+      - view_dmsf_file_revision_accesses
+      # リビジョン履歴の表示
+      - view_dmsf_file_revisions
+      # ファイルの一覧
+      - view_dmsf_folders
+      # ファイルの表示
+      - view_dmsf_files
+
+## --------------------
+## チケットの優先度
+## --------------------
+# redmine_reimport_priority: true
+redmine_priorities:
+  - name: 低い
+    id: 1
+  - name: 通常
+    id: 2
+    is_default: true
+  - name: 高い
+    id: 3
+  - name: 早急に
+    id: 4
+  - name: 緊急
+    id: 5
+
+## --------------------
+## 文書カテゴリ
+## --------------------
+# redmine_reimport_document_category: true
+redmine_document_categories:
+  - name: ユーザーマニュアル
+    id: 6
+  - name: 開発ドキュメント
+    id: 7
+
+## --------------------
+## 作業分類
+## --------------------
+# redmine_reimport_time_entry_activity: true
+redmine_time_entry_activities:
+  - name: 調査
+    position: 1
+  - name: 要件定義
+    position: 2
+  - name: 設計
+    id: 8
+    position: 3
+  - name: コーディング
+    id: 9
+    position: 4
+  - name: テスト
+    position: 5
+  - name: ドキュメント
+    position: 6
+  - name: 打ち合わせ
+    position: 7
+  - name: その他
+    position: 8
+
+## --------------------
+## チケットのカスタムフィールド
+## --------------------
+# redmine_reimport_issue_custom_field: true
+redmine_issue_custom_fields:
+  - name: 理由
+    field_format: string
+    description: ステータス変更時の理由を記載します
+    visible: true
+    searchable: false
+    is_filter: false
+    trackers:
+      - 要望
+      - タスク
+      - 不具合
+      - 運用保守
+      - 問い合わせ
+      - その他
+
+## --------------------
+## プロジェクトのカスタムフィールド
+## --------------------
+# redmine_reimport_project_custom_field: true
+redmine_project_custom_fields:
+  - name: 管理画面URL
+    field_format: link
+    description: 管理画面のURLを設定します
+    visible: true
+
+## --------------------
+## ユーザーのカスタムフィールド
+## --------------------
+# redmine_reimport_user_custom_field: true
+redmine_user_custom_fields:
+  - name: 電話番号
+    field_format: string
+    description: 日中連絡先の電話番号を設定します
+    visible: true
+  - name: Githubアカウント
+    field_format: string
+    description: Githubのアカウント名を設定します。
+    visible: true
+    url_pattern: https://github.com/%value%
+  - name: 自己紹介
+    field_format: text
+    visible: true
+  - name: 性格タイプ(MBTI)
+    field_format: list
+    description: |
+      16personalities(MBTI)の性格タイプを設定します。
+      https://www.16personalities.com/ja
+    visible: true
+    possible_values:
+      - INTJ
+      - INTP
+      - ENTJ
+      - ENTP
+      - INFJ
+      - INFP
+      - ENFJ
+      - ENFP
+      - ISTJ
+      - ISFJ
+      - ESTJ
+      - ESFJ
+      - ISTP
+      - ISFP
+      - ESTP
+      - ESFP
+    url_pattern: https://www.16personalities.com/ja/%value%%E5%9E%8B%E3%81%AE%E6%80%A7%E6%A0%BC
+  - name: キャリア・アンカー(専門・職能別能力)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(管理能力)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(自律・独立)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(保証・安定)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(起業家的創造性)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(奉仕・社会貢献)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(純粋な挑戦)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: キャリア・アンカー(ライフワークバランス)
+    field_format: list
+    visible: true
+    description: 価値観の大きさに応じて10段階で指定してください
+    possible_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  - name: ログイン後の遷移先
+    field_format: string
+    description: ログイン後のURLを「/」で始まるURLで指定します。
+    regexp: "^/+"
+    visible: false
+
+## --------------------
+## Redmineの設定
+## --------------------
+# redmine_reimport_setting: true
+redmine_settings:
+  ## --------------------
+  ## Redmine本体の設定
+  ## --------------------
+  ## 全般
+  # ホスト名とパス
+  # host_name: "{{ inventory_hostname }}"
+  # テキスト書式
+  text_formatting: common_mark
+  # ウェルカムメッセージ
+  welcome_text: "{{ lookup('file', 'files/welcome.md') }}"
+  ## 表示
+  # デフォルトの言語
+  default_language: ja
+  # 時間の形式
+  timespan_format: decimal
+  # ユーザー名の表示形式
+  user_format: lastname_firstname
+  # 新規オブジェクト作成タブ：「新しいチケット」タブを表示
+  new_item_menu_tab: 1
+  ## 認証
+  # 認証が必要
+  login_required: 1
+  # 自動ログイン
+  autologin: 30
+  ## API
+  # RESTによるWebサービスを有効にする
+  rest_api_enabled: 1
+  ## プロジェクト
+  # デフォルトで新しいプロジェクトは公開にする
+  default_projects_public: 0
+  # 新規プロジェクトにおいてデフォルトで有効になるモジュール
+  default_projects_modules:
+    # チケットトラッキング
+    - issue_tracking
+    # 時間管理
+    - time_tracking
+    # ニュース
+    - news
+    # ファイル
+    - files
+    # Wiki
+    - wiki
+    # カレンダー
+    - calendar
+    # ガントチャート
+    - gantt
+    # チケットテンプレート
+    - issue_templates
+    # ダッシュボード
+    - dashboard
+  # 新規プロジェクトにおいてデフォルトで有効になるトラッカー
+  default_projects_trackers:
+    - 要望
+    - タスク
+    - 不具合
+    - 運用保守
+    - 問い合わせ
+    - その他
+  ## ユーザー
+  # 新しいユーザーのデフォルト設定(タイムゾーン)
+  default_users_time_zone: Tokyo
+  ## チケットトラッキング
+  # チケットをコピーしたときに関連を設定
+  link_copied_issue: ask
+  # 現在の日付を新しいチケットの開始日とする
+  default_issue_start_date_to_creation_date: 0
+  # チケットの一覧で表示する項目
+  issue_list_default_columns:
+    # トラッカー
+    - tracker
+    # 優先度
+    - priority
+    # 題名
+    - subject
+    # ステータス
+    - status
+    # 進捗率
+    - done_ratio
+    # 担当者
+    - assigned_to
+    # 期日
+    - due_date
+    # 更新日
+    - updated_on
+  ## ファイル
+  # 添付ファイルサイズの上限(KB)
+  attachment_max_size: 10240
+  # 添付ファイルとリポジトリのエンコーディング
+  repositories_encodings: "utf-8,cp932,euc-jp"
+  ## ----------
+  ## プラグインの設定
+  ## ----------
+  ### Additionals
+  plugin_additionals:
+    # 無効にするモジュール
+    disabled_modules:
+      - repository
+    # ツールバーで無効にするマクロ
+    hidden_macros_in_toolbar:
+      - drawio
+      - reddit
+      - redmine_issue
+      - redmine_wiki
+    # 新規チケットのメモ
+    new_ticket_message: |
+      何をしてほしいかだけでなく、その理由や背景もきちんと記載しましょう。
+      また、何をもって完了とみなすのかの達成条件もきちんと記載するようにしましょう。
+      (追加の要望などが出てきた場合は現在のチケットに追記するのではなく新たにチケットを登録して対応してもらいましょう)
+    # プロフィール画面に「新しいチケット」を表示する
+    new_issue_on_profile: 1
+    # チケットのステータスをサイドバーに表示する
+    issue_change_status_in_sidebar: 1
+    # 終了したチケットの編集を禁止する
+    issue_freezed_with_close: 1
+    # issue_status_change: 0
+    # issue_status_x: []
+    # issue_status_y: null
+    # issue_current_user_status: 0
+    # issue_assign_to_x: []
+    # issue_auto_assign: 0
+    # issue_auto_assign_status: []
+    # issue_auto_assign_role: null
+    # issue_timelog_required: 0
+    # issue_timelog_required_tracker: []
+    # issue_timelog_required_status: []
+  ### RedMica UI extension
+  plugin_redmica_ui_extension:
+    # セレクトボックスを検索可能にする
+    searchable_selectbox:
+      enabled: 0
+  ### チケットテンプレート
+  plugin_redmine_issue_templates:
+    # グローバルチケットテンプレートを全てのプロジェクトに適用
+    apply_global_template_to_all_projects: "true"
+  ### メッセンジャー
+  plugin_redmine_messenger:
+    # チケットの更新
+    post_updates: 1
+    # チケット作成時に説明を含める
+    new_include_description: 1
+    # チケット更新時に説明を含める
+    updated_include_description: 1
+    # Wikiの作成
+    post_wiki: 1
+    # Wikiの更新
+    post_wiki_updates: 1
+  ### DMSF(文書管理)
+  plugin_redmine_dmsf:
+    # WebDAV
+    dmsf_webdav: 0
+
+## --------------------
+## ワークフロー
+## --------------------
+# redmine_reimport_workflow: true
+redmine_workflows:
+  ## ----------
+  ## 管理者
+  ## ----------
+  ### 種別：要望
+  - roles: [管理者]
+    trackers: [要望]
+    transitions:
+      - from: 未対応
+        to: [確認待ち, 保留, 破棄]
+      - from: 確認待ち
+        to: [フィードバック, 保留, 破棄]
+      - from: フィードバック
+        to: [未対応, 確認待ち, 保留, 破棄]
+      - from: 保留
+        to: [未対応, 確認待ち, 破棄]
+      - from: 破棄
+        to: [未対応, 確認待ち, 保留]
+  ### 種別：タスク
+  - roles: [管理者]
+    trackers: [タスク]
+    transitions:
+      - from: 未対応
+        to: [対応中, 対応済み, 確認待ち, 保留, 破棄]
+      - from: 対応中
+        to: [未対応, 対応済み, 確認待ち]
+      - from: 対応済み
+        to: [対応中, 確認待ち, 完了]
+      - from: 確認待ち
+        to: [未対応, 対応中, フィードバック, 保留, 経過観察, 完了, 破棄]
+      - from: 経過観察
+        to: [対応中, 完了]
+      - from: フィードバック
+        to: [未対応, 対応中, 確認待ち, 保留, 完了, 破棄]
+      - from: 保留
+        to: [未対応, 対応中, 確認待ち, 破棄]
+      - from: 完了
+        to: [未対応, 対応中, 確認待ち, 経過観察, 保留, 破棄]
+      - from: 破棄
+        to: [未対応, 対応中, 確認待ち, 経過観察, 保留, 完了]
+  ### 種別：不具合, 運用保守
+  - roles: [管理者]
+    trackers: [不具合, 運用保守]
+    transitions:
+      - from: 未対応
+        to: [対応中, 対応済み, 確認待ち, 経過観察, 保留]
+      - from: 対応中
+        to: [未対応, 対応済み, 確認待ち, 保留]
+      - from: 対応済み
+        to: [対応中, 確認待ち]
+      - from: 確認待ち
+        to: [未対応, 対応中, フィードバック, 保留, 完了, 破棄]
+      - from: 経過観察
+        to: [未対応, 対応中, 破棄]
+      - from: フィードバック
+        to: [未対応, 対応中, 確認待ち, 保留, 完了, 破棄]
+      - from: 保留
+        to: [未対応, 対応中, 確認待ち, 破棄]
+      - from: 完了
+        to: [未対応, 対応中, 確認待ち, 経過観察, 破棄]
+      - from: 破棄
+        to: [未対応, 対応中, 確認待ち, 経過観察, 完了]
+  ### 種別：問い合わせ, その他
+  - roles: [管理者]
+    trackers: [問い合わせ, その他]
+    transitions:
+      - from: 未対応
+        to: [対応中, 対応済み, 確認待ち, 破棄]
+      - from: 対応中
+        to: [未対応, 対応済み, 確認待ち]
+      - from: 対応済み
+        to: [対応中, 確認待ち, 完了]
+      - from: 確認待ち
+        to: [未対応, 対応中, 対応済み, フィードバック, 保留, 完了, 破棄]
+      - from: フィードバック
+        to: [未対応, 対応中, 確認待ち, 保留, 完了, 破棄]
+      - from: 保留
+        to: [未対応, 対応中, 確認待ち, 破棄]
+      - from: 完了
+        to: [未対応, 対応中, 確認待ち, 破棄]
+      - from: 破棄
+        to: [未対応, 対応中, 確認待ち, 完了]
+  ## ----------
+  ## 開発者
+  ## ----------
+  ### 種別：要望
+  - roles: [開発者]
+    trackers: [要望]
+    transitions:
+      - from: 未対応
+        to: [確認待ち, 保留, 破棄]
+      - from: 確認待ち
+        to: [フィードバック, 保留, 破棄]
+      - from: フィードバック
+        to: [未対応, 確認待ち, 保留, 破棄]
+      - from: 保留
+        to: [未対応, 確認待ち, 破棄]
+  ### 種別：タスク
+  - roles: [開発者]
+    trackers: [タスク]
+    transitions:
+      - from: 未対応
+        to: [対応中, 対応済み, 確認待ち, 破棄]
+      - from: 対応中
+        to: [未対応, 対応済み, 確認待ち]
+      - from: 対応済み
+        to: [対応中, 確認待ち, 完了]
+      - from: 確認待ち
+        to: [未対応, 対応中, フィードバック, 経過観察, 完了, 破棄]
+      - from: 経過観察
+        to: [対応中, 完了]
+      - from: フィードバック
+        to: [未対応, 対応中, 確認待ち, 完了, 破棄]
+  ### 種別：不具合, 運用保守
+  - roles: [開発者]
+    trackers: [不具合, 運用保守]
+    transitions:
+      - from: 未対応
+        to: [対応中, 対応済み, 確認待ち, 経過観察]
+      - from: 対応中
+        to: [未対応, 対応済み, 確認待ち]
+      - from: 対応済み
+        to: [対応中, 確認待ち]
+      - from: 確認待ち
+        to: [未対応, 対応中, フィードバック, 完了, 破棄]
+      - from: 経過観察
+        to: [未対応, 対応中, 破棄]
+      - from: フィードバック
+        to: [未対応, 対応中, 確認待ち, 完了, 破棄]
+  ### 種別：問い合わせ, その他
+  - roles: [開発者]
+    trackers: [問い合わせ, その他]
+    transitions:
+      - from: 未対応
+        to: [対応中, 対応済み, 確認待ち, 破棄]
+      - from: 対応中
+        to: [未対応, 対応済み, 確認待ち]
+      - from: 対応済み
+        to: [対応中, 確認待ち, 完了]
+      - from: 確認待ち
+        to: [未対応, 対応中, 対応済み, フィードバック, 完了, 破棄]
+      - from: フィードバック
+        to: [未対応, 対応中, 確認待ち, 完了, 破棄]
+  ## ----------
+  ## 報告者
+  ## ----------
+  ### 種別：要望
+  - roles: [報告者]
+    trackers: [要望]
+    transitions:
+      - from: 未対応
+        to: [確認待ち, 保留, 破棄]
+      - from: 確認待ち
+        to: [フィードバック, 保留, 破棄]
+      - from: フィードバック
+        to: [未対応, 確認待ち, 保留, 破棄]
+      - from: 保留
+        to: [未対応, 確認待ち, 破棄]
+  ### 種別：タスク, 問い合わせ, その他
+  - roles: [報告者]
+    trackers: [タスク, 問い合わせ, その他]
+    transitions:
+      - from: 未対応
+        to: [確認待ち, 破棄]
+      - from: 確認待ち
+        to: [フィードバック, 完了, 破棄]
+      - from: フィードバック
+        to: [確認待ち, 完了, 破棄]
+  ### 種別：不具合, 運用保守
+  - roles: [報告者]
+    trackers: [不具合, 運用保守]
+    transitions:
+      - from: 未対応
+        to: [確認待ち, 破棄]
+      - from: 確認待ち
+        to: [フィードバック, 完了, 破棄]
+      - from: フィードバック
+        to: [確認待ち, 完了, 破棄]
+      - from: 経過観察
+        to: [破棄]
+
+## --------------------
+## フィールドの権限
+## --------------------
+# redmine_reimport_field_permission: true
+redmine_field_permissions:
+  - roles: [管理者, 開発者, 報告者]
+    trackers: [タスク, 不具合, 運用保守, その他]
+    permissions:
+      # 以下のステータスの場合は「担当者」を必須化
+      - statuses: [対応中, 対応済み, 確認待ち, フィードバック, 完了]
+        fields: assigned_to
+        permission: required
+      # ステータスが「破棄」以外の場合は、カスタムフィールド「破棄理由」を非表示にする
+      - statuses: [未対応, 対応中, 対応済み, 確認待ち, フィードバック, 完了]
+        fields: 理由
+        permission: readonly
+      # ステータスが「破棄」の場合、カスタムフィールド「理由」を必須化
+      - statuses: [破棄, 破棄]
+        fields: 理由
+        permission: required
+
+## --------------------
+## ユーザー
+## --------------------
+# redmine_reimport_user: true
+redmine_users:
+  - login: call_api_from_github
+    firstname: 連携
+    lastname: Github
+    mail: call_api_from_github@example.com
+    password: call_api_from_github_password_not_found
+    mail_notification: none
+    admin: true
+    auto_watch_on: false
+    hide_mail: true
+    locked: true
+    custom_fields:
+      - name: 自己紹介
+        value: |
+          GithubからRedmineのAPIを利用する場合はこのアカウントを利用してください。
+          ※このアカウントを利用する場合はロックを解除してください。
+  - login: authority_check_admin
+    firstname: 管理者
+    lastname: 権限チェック
+    mail: check@example.com
+    hide_mail: true
+    password: authority_check_admin_password
+    mail_notification: none
+    admin: false
+    custom_fields:
+      - name: 自己紹介
+        value: このユーザーは権限チェック完了後にロックしてください
+  - login: authority_check_developer
+    firstname: 開発者
+    lastname: 権限チェック
+    mail: check@example.net
+    hide_mail: true
+    password: authority_check_developer_password
+    mail_notification: none
+    admin: false
+    auto_watch_on: false
+    custom_fields:
+      - name: 自己紹介
+        value: このユーザーは権限チェック完了後にロックしてください
+  - login: authority_check_repoter
+    firstname: 報告者
+    lastname: 権限チェック
+    mail: check@example.org
+    hide_mail: true
+    password: authority_check_repoter_password
+    mail_notification: none
+    admin: false
+    auto_watch_on: false
+    custom_fields:
+      - name: 自己紹介
+        value: このユーザーは権限チェック完了後にロックしてください
+  - login: authority_check_guest
+    firstname: ゲスト
+    lastname: 権限チェック
+    mail: check@example.info
+    hide_mail: true
+    password: authority_check_guest_password
+    mail_notification: none
+    admin: false
+    auto_watch_on: false
+    custom_fields:
+      - name: 自己紹介
+        value: このユーザーは権限チェック完了後にロックしてください
+  - login: client_contact_person
+    firstname: 担当者
+    lastname: クライアント
+    mail: client_contact_person@example.info
+    password: client_contact_person_password
+    ### メール通知
+    mail_notification: none
+    ### システム管理者
+    admin: false
+    ## 優先度が 高い 以上のチケットについても通知
+    notify_about_high_priority_issues: false
+    ## 自分自身による変更の通知は不要
+    no_self_notified: true
+    ### オートウォッチ
+    auto_watch_on:
+      ### 自分が作成したチケット
+      - issue_created
+      ### 自分が更新したチケット
+      - issue_contributed_to
+    ## メールアドレスを隠す
+    hide_mail: false
+    ## カスタムフィールド
+    custom_fields:
+      - name: 自己紹介
+        value: |
+          クライアントの担当者を表すユーザーです。
+          ※このアカウントを利用しない場合はロックしてください。
+
+## --------------------
+## グループ
+## --------------------
+# redmine_reimport_group: true
+redmine_groups:
+  - name: API用
+    users:
+      - call_api_from_github
+  - name: 権限チェック用
+    users:
+      - authority_check_admin
+      - authority_check_developer
+      - authority_check_repoter
+      - authority_check_guest
+
+## --------------------
+## チケットのカスタムクエリ
+## --------------------
+# redmine_reimport_issue_query: true
+redmine_issue_queries:
+  - name: 担当しているチケット
+    filters:
+      project.status:
+        operator: "="
+        values: 1
+      assigned_to:
+        operator: "="
+        values: me
+      tracker:
+        operator: "="
+        values:
+          - タスク
+          - 不具合
+          - 運用保守
+          - 問い合わせ
+          - その他
+      status:
+        operator: o
+    sort:
+      # 優先度 / 降順
+      - field: priority
+        order: desc
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 親チケット / 昇順
+      - field: parent
+        order: asc
+  - name: 作業担当チケット
+    filters:
+      project.status:
+        operator: "="
+        values: 1
+      assigned_to:
+        operator: "="
+        values: me
+      tracker:
+        operator: "="
+        values:
+          - タスク
+          - 不具合
+          - 運用保守
+          - 問い合わせ
+          - その他
+      status:
+        operator: "="
+        values:
+          - 未対応
+          - 対応中
+          - 対応済み
+          - 経過観察
+    sort:
+      # 優先度 / 降順
+      - field: priority
+        order: desc
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 親チケット / 昇順
+      - field: parent
+        order: asc
+  - name: 確認待ちチケット
+    filters:
+      project.status:
+        operator: "="
+        values: 1
+      status:
+        operator: "="
+        values: 確認待ち
+      assigned_to:
+        operator: "="
+        values: me
+    columns:
+      # プロジェクト
+      - project
+      # トラッカー
+      - tracker
+      # 題名
+      - subject
+      # 優先度
+      - priority
+      # 期日
+      - due_date
+    ## 並び順
+    sort:
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 優先度 / 降順
+      - field: priority
+        order: desc
+      # チケットNo / 昇順
+      - field: id
+        order: asc
+  - name: フィードバックチケット
+    filters:
+      project.status:
+        operator: "="
+        values: 1
+      status:
+        operator: "="
+        values: フィードバック
+      assigned_to:
+        operator: "="
+        values: me
+    columns:
+      # プロジェクト
+      - project
+      # トラッカー
+      - tracker
+      # 題名
+      - subject
+      # 優先度
+      - priority
+      # 期日
+      - due_date
+    sort:
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 優先度 / 降順
+      - field: priority
+        order: desc
+      # チケットNo / 昇順
+      - field: id
+        order: asc
+  - name: 経過観察チケット
+    filters:
+      project.status:
+        operator: "="
+        values: 1
+      status:
+        operator: "="
+        values: 経過観察
+      assigned_to:
+        operator: "="
+        values: me
+    columns:
+      # プロジェクト
+      - project
+      # トラッカー
+      - tracker
+      # 題名
+      - subject
+      # 優先度
+      - priority
+      # 期日
+      - due_date
+    ## 並び順
+    sort:
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 優先度 / 降順
+      - field: priority
+        order: desc
+      # チケットNo / 昇順
+      - field: id
+        order: asc
+  - name: 先月度実績
+    filters:
+      # ステータス / 終了
+      status:
+        operator: c
+        values:
+          - ""
+      # 終了日 / 先月
+      closed_on:
+        operator: lm
+        values:
+          - ""
+    columns:
+      # トラッカー
+      - tracker
+      # 優先度
+      - priority
+      # 題名
+      - subject
+      # 担当者
+      - assigned_to
+      # 予定時間
+      - estimated_hours
+      # 作業時間
+      - spent_hours
+      # 期日
+      - due_date
+      # 終了日
+      - closed_on
+    group_by: project
+    sort:
+      # プロジェクト / 昇順
+      - field: project
+        order: asc
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 終了日 / 昇順
+      - field: closed_on
+        order: asc
+    total:
+      # 予定時間
+      - estimated_hours
+      # 作業時間
+      - spent_hours
+  - name: 今月度実績
+    filters:
+      # ステータス / 終了
+      status:
+        operator: c
+        values:
+          - ""
+      # 終了日 / 今月
+      closed_on:
+        operator: m
+        values:
+          - ""
+    columns:
+      # トラッカー
+      - tracker
+      # 優先度
+      - priority
+      # 題名
+      - subject
+      # 担当者
+      - assigned_to
+      # 予定時間
+      - estimated_hours
+      # 作業時間
+      - spent_hours
+      # 期日
+      - due_date
+      # 終了日
+      - closed_on
+    group_by: project
+    sort:
+      # プロジェクト / 昇順
+      - field: project
+        order: asc
+      # 期日 / 昇順
+      - field: due_date
+        order: asc
+      # 終了日 / 昇順
+      - field: closed_on
+        order: asc
+    total:
+      - estimated_hours
+      - spent_hours
+
+## --------------------
+## プロジェクトのカスタムクエリ
+## --------------------
+# redmine_reimport_project_query: true
+redmine_project_queries:
+  - name: 参加中
+    id: 5
+    ## 説明
+    description: 参加中のプロジェクトのみ表示します
+    ## フィルタ
+    filters:
+      status:
+        operator: "="
+        values:
+          - 1
+      id:
+        operator: "="
+        values:
+          - mine
+    ## 表示: 自分のみ:false / すべてのユーザー:true
+    visibility: true
+    ## 表示形式: ボード:board / リスト:list
+    display_type: board
+  - name: ブックマーク済み
+    id: 6
+    description: ブックマーク済みのプロジェクトのみ表示します
+    filters:
+      status:
+        operator: "="
+        values:
+          - 1
+      id:
+        operator: "="
+        values:
+          - bookmarks
+    visibility: true
+    display_type: board
+  - name: 雛形プロジェクト
+    description: 雛形用のプロジェクトのみ表示します
+    filters:
+      status:
+        operator: "="
+        values:
+          - 1
+      description:
+        operator: "~"
+        values: テンプレートプロジェクト
+    visibility: true
+    display_type: list
+
+## --------------------
+## 時間管理のカスタムクエリ(未実装)
+## --------------------
+# redmine_reimport_time_entry_query: true
+redmine_time_entry_queries: []
+
+## --------------------
+## Wikiページのデータ
+## --------------------
+## ホーム
+redmine_wiki_content_home: "{{ lookup('file', 'files/wiki/home.md') }}"
+## サイドバー
+redmine_wiki_content_sidebar: "{{ lookup('file', 'files/wiki/sidebar.md') }}"
+## システム概要
+redmine_wiki_content_overview: "{{ lookup('file', 'files/wiki/overview.md') }}"
+redmine_wiki_content_overview_architecture: "{{ lookup('file', 'files/wiki/overview/architecture.md') }}"
+redmine_wiki_content_overview_data_structure: "{{ lookup('file', 'files/wiki/overview/data_structure.md') }}"
+redmine_wiki_content_overview_technology: "{{ lookup('file', 'files/wiki/overview/technology.md') }}"
+redmine_wiki_content_overview_feature: "{{ lookup('file', 'files/wiki/overview/feature.md') }}"
+## 環境情報
+redmine_wiki_content_environment: "{{ lookup('file', 'files/wiki/environment.md') }}"
+redmine_wiki_content_environment_development: "{{ lookup('file', 'files/wiki/environment/development.md') }}"
+redmine_wiki_content_environment_staging: "{{ lookup('file', 'files/wiki/environment/staging.md') }}"
+redmine_wiki_content_environment_production: "{{ lookup('file', 'files/wiki/environment/production.md') }}"
+## 開発情報
+redmine_wiki_content_development: "{{ lookup('file', 'files/wiki/development.md') }}"
+redmine_wiki_content_development_deploy: "{{ lookup('file', 'files/wiki/development/deploy.md') }}"
+redmine_wiki_content_development_local_dev_env: "{{ lookup('file', 'files/wiki/development/local_dev_env.md') }}"
+redmine_wiki_content_development_repository: "{{ lookup('file', 'files/wiki/development/repository.md') }}"
+## インフラ情報
+redmine_wiki_content_infra: "{{ lookup('file', 'files/wiki/infra.md') }}"
+redmine_wiki_content_infra_cloud: "{{ lookup('file', 'files/wiki/infra/cloud.md') }}"
+redmine_wiki_content_infra_dns: "{{ lookup('file', 'files/wiki/infra/dns.md') }}"
+redmine_wiki_content_infra_server: "{{ lookup('file', 'files/wiki/infra/server.md') }}"
+## インフラ情報 - サーバー情報
+redmine_wiki_content_infra_server_package: "{{ lookup('file', 'files/wiki/infra/server/package.md') }}"
+redmine_wiki_content_infra_server_disk: "{{ lookup('file', 'files/wiki/infra/server/disk.md') }}"
+redmine_wiki_content_infra_server_file: "{{ lookup('file', 'files/wiki/infra/server/file.md') }}"
+redmine_wiki_content_infra_server_port: "{{ lookup('file', 'files/wiki/infra/server/port.md') }}"
+redmine_wiki_content_infra_server_traffic: "{{ lookup('file', 'files/wiki/infra/server/traffic.md') }}"
+redmine_wiki_content_infra_server_other: "{{ lookup('file', 'files/wiki/infra/server/other.md') }}"
+## ヘルプ
+redmine_wiki_content_help: "{{ lookup('file', 'files/wiki/help.md') }}"
+redmine_wiki_content_help_format: "{{ lookup('file', 'files/wiki/help/format.md') }}"
+redmine_wiki_content_help_operation: "{{ lookup('file', 'files/wiki/help/operation.md') }}"
+redmine_wiki_content_help_macro_list: "{{ lookup('file', 'files/wiki/help/macro_list.md') }}"
+### ヘルプ - ワークフロー
+redmine_wiki_content_help_workflow: "{{ lookup('file', 'files/wiki/help/workflow.md') }}"
+redmine_wiki_content_help_workflow_request: "{{ lookup('file', 'files/wiki/help/workflow/request.md') }}"
+redmine_wiki_content_help_workflow_task: "{{ lookup('file', 'files/wiki/help/workflow/task.md') }}"
+redmine_wiki_content_help_workflow_bug: "{{ lookup('file', 'files/wiki/help/workflow/bug.md') }}"
+redmine_wiki_content_help_workflow_inquiry: "{{ lookup('file', 'files/wiki/help/workflow/inquiry.md') }}"
+
+redmine_wiki_page_sidebar: "{{ redmine_wiki_content_sidebar }}"
+redmine_wiki_page_help:
+  content: "{{ redmine_wiki_content_help }}"
+  childlen:
+    Redmine記法: "{{ redmine_wiki_content_help_format }}"
+    運用方法: "{{ redmine_wiki_content_help_operation }}"
+    ワークフロー:
+      content: "{{ redmine_wiki_content_help_workflow }}"
+      childlen:
+        要望: "{{ redmine_wiki_content_help_workflow_request }}"
+        タスク: "{{ redmine_wiki_content_help_workflow_task }}"
+        不具合: "{{ redmine_wiki_content_help_workflow_bug }}"
+        問い合わせ: "{{ redmine_wiki_content_help_workflow_inquiry }}"
+    マクロ一覧: "{{ redmine_wiki_content_help_macro_list }}"
+redmine_wiki_page_orverview:
+  content: "{{ redmine_wiki_content_overview }}"
+  childlen:
+    システム構成: "{{ redmine_wiki_content_overview_architecture }}"
+    データ構造: "{{ redmine_wiki_content_overview_data_structure }}"
+    技術スタック: "{{ redmine_wiki_content_overview_technology }}"
+    機能一覧: "{{ redmine_wiki_content_overview_feature }}"
+redmine_wiki_page_environment:
+  content: "{{ redmine_wiki_content_environment }}"
+  childlen:
+    開発環境: "{{ redmine_wiki_content_environment_development }}"
+    ステージング環境: "{{ redmine_wiki_content_environment_staging }}"
+    本番環境: "{{ redmine_wiki_content_environment_production }}"
+redmine_wiki_page_development:
+  content: "{{ redmine_wiki_content_development }}"
+  childlen:
+    デプロイ方法: "{{ redmine_wiki_content_development_deploy }}"
+    ローカル開発環境: "{{ redmine_wiki_content_development_local_dev_env }}"
+    リポジトリ情報: "{{ redmine_wiki_content_development_repository }}"
+redmine_wiki_page_infra:
+  content: "{{ redmine_wiki_content_infra }}"
+  childlen:
+    クラウド情報: "{{ redmine_wiki_content_infra_cloud }}"
+    DNS情報: "{{ redmine_wiki_content_infra_dns }}"
+    サーバー情報:
+      content: "{{ redmine_wiki_content_infra_server }}"
+      childlen:
+        パッケージ情報: "{{ redmine_wiki_content_infra_server_package }}"
+        ディスク使用量: "{{ redmine_wiki_content_infra_server_disk }}"
+        ファイル: "{{ redmine_wiki_content_infra_server_file }}"
+        待受ポート: "{{ redmine_wiki_content_infra_server_port }}"
+        トラフィック: "{{ redmine_wiki_content_infra_server_traffic }}"
+        その他: "{{ redmine_wiki_content_infra_server_other }}"
+
+## --------------------
+## プロジェクト
+## --------------------
+# redmine_reimport_project: true
+redmine_projects:
+  ## 「識別子」は100文字までです。アルファベット小文字(a-z)・数字・ハイフン・アンダースコアが使えます。
+  client:
+    name: クライアント
+    description: クライアント用のテンプレートプロジェクトです
+    ## ホームページ
+    homepage: https://example.com/
+    ## 公開
+    is_public: false
+    ## モジュール
+    modules:
+      ## チケットトラッキング
+      - issue_tracking
+      ## 時間管理
+      - time_tracking
+      ## ニュース
+      - news
+      ## 文書
+      - documents
+      # ファイル
+      - files
+      ## Wiki
+      - wiki
+      ## カレンダー
+      - calendar
+      # ガントチャート
+      - gantt
+      ## チケットテンプレート
+      - issue_templates
+      ## ダッシュボード
+      - dashboard
+      ## DMSF
+      - dmsf
+    ## メンバーを継承
+    # inherit_members: true
+    ## メンバー
+    members:
+      - login: authority_check_admin
+        role: 管理者
+      - login: authority_check_developer
+        role: 開発者
+      - login: admin
+        role: [管理者, 開発者]
+      - login: authority_check_repoter
+        role: 報告者
+    ## トラッカー
+    trackes:
+      - 要望
+      - タスク
+      - 不具合
+      - 運用保守
+      - 問い合わせ
+      - その他
+    custom_fields:
+      - name: Slack Channel
+        value: "#general"
+    wiki_main_page: Wiki
+    wiki_pages:
+      Wiki:
+        content: "{{ lookup('file', 'files/wiki/home/client.md') }}"
+        childlen:
+          ヘルプ: "{{ redmine_wiki_page_help }}"
+      Sidebar: "{{ redmine_wiki_page_sidebar }}"
+    issue_queries: []
+    time_entry_queries: []
+    childlen:
+      web:
+        name: Web制作
+        description: Web制作用のテンプレートプロジェクトです
+        is_public: false
+        inherit_members: true
+        homepage: https://example.com/
+        custom_fields:
+          - name: 管理画面URL
+            value: https://example.com/wp-login.php
+        wiki_main_page: Wiki
+        wiki_pages:
+          Wiki:
+            content: "{{ lookup('file', 'files/wiki/home/web.md') }}"
+            childlen:
+              ヘルプ: "{{ redmine_wiki_page_help }}"
+          Sidebar: "{{ redmine_wiki_page_sidebar }}"
+      develop:
+        name: システム開発
+        description: システム開発用のテンプレートプロジェクトです
+        inherit_members: true
+        homepage: https://app.example.com/
+        custom_fields:
+          - name: 管理画面URL
+            value: https://admin.example.com/
+        wiki_pages:
+          Wiki:
+            content: "{{ lookup('file', 'files/wiki/home/develop.md') }}"
+            childlen:
+              システム概要: "{{ redmine_wiki_page_orverview }}"
+              インフラ情報: "{{ redmine_wiki_page_infra }}"
+              環境情報: "{{ redmine_wiki_page_environment }}"
+              開発情報: "{{ redmine_wiki_page_development }}"
+              ヘルプ: "{{ redmine_wiki_page_help }}"
+          Sidebar: "{{ redmine_wiki_page_sidebar }}"
+      infra:
+        name: インフラ管理
+        description: インフラ管理用のテンプレートプロジェクトです
+        inherit_members: true
+        wiki_pages:
+          Wiki:
+            content: "{{ lookup('file', 'files/wiki/home/infra.md') }}"
+            childlen:
+              ヘルプ: "{{ redmine_wiki_page_help }}"
+          Sidebar: "{{ redmine_wiki_page_sidebar }}"
+      support:
+        name: カスタマーサポート
+        description: 問い合わせ管理用のテンプレートプロジェクトです
+        inherit_members: true
+        wiki_pages:
+          Wiki:
+            content: "{{ lookup('file', 'files/wiki/home/support.md') }}"
+            childlen:
+              ヘルプ: "{{ redmine_wiki_page_help }}"
+          Sidebar: "{{ redmine_wiki_page_sidebar }}"
+
+## --------------------
+## 添付ファイル
+## --------------------
+# redmine_reimport_attachment: true
+redmine_attachments:
+  - project: client
+    file: files/attachment/dummy_project.txt
+    description: ダミーファイル
+    remote_file: true
+  - project: client
+    wiki: Wiki
+    file: files/attachment/dummy_wiki.txt
+    filename: dummy.txt
+    remote_file: true
+
+## --------------------
+## message customizeプラグイン
+## --------------------
+# 置換内容
+# ------------------
+# トラッカー => 分類
+# チケットトラッキング => 課題管理
+# チケット => 課題
+# 文書 => ドキュメント
+# ニュース => お知らせ
+# デフォルト値 => 初期値
+# プライベート => 下書き
+# カスタムクエリ => 検索条件
+# 新しいクエリ => 新しい検索条件
+# アノテート => 注釈
+# ------------------
+# redmine_reimport_message_customize: true
+redmine_message_customize:
+  activerecord:
+    errors:
+      messages:
+        cant_link_an_issue_with_a_descendant: "親子関係にある課題間での関連の設定はできません"
+        earlier_than_minimum_start_date: "を%{date}より前にすることはできません。先行する課題があります"
+        open_issue_with_closed_parent: "完了した課題に未完了の子課題を追加することはできません"
+  notice_failed_to_save_issues: "全%{total}件中%{count}件の課題が保存できませんでした: %{ids}。"
+  notice_issue_done_ratios_updated: 課題の進捗率を更新しました。
+  error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
+  error_issue_not_found_in_project: '課題が見つかりません、もしくはこのプロジェクトに属していません'
+  error_unable_delete_issue_status: "課題のステータスを削除できませんでした。 (%{value})"
+  error_no_tracker_in_project: 'このプロジェクトには分類が登録されていません。プロジェクト設定を確認してください。'
+  error_no_default_issue_status: 'デフォルトの課題ステータスが定義されていません。設定を確認してください（管理→課題のステータス）。'
+  error_can_not_reopen_issue_on_closed_version: '終了したバージョンにひも付けされた課題の再オープンはできません。'
+  error_issue_done_ratios_not_updated: "課題の進捗率が更新できません。"
+  error_workflow_copy_source: 'コピー元となる分類またはロールを選択してください'
+  error_workflow_copy_target: 'コピー先となる分類とロールを選択してください'
+  error_can_not_delete_tracker: 'この分類は使用中です。削除できません。'
+  mail_subject_reminder: "%{count}件の課題の期日が%{days}日以内に到来します"
+  mail_body_reminder: "%{count}件の担当課題の期日が%{days}日以内に到来します:"
+  field_issue: 課題
+  field_is_closed: 終了した課題
+  field_is_default: 初期値
+  field_tracker: 分類
+  field_is_in_roadmap: 課題をロードマップに表示する
+  field_issue_to: 関連する課題
+  field_assignable: このロールのユーザーに課題を割り当て可能
+  field_default_value: 初期値
+  field_parent_issue: 親課題
+  setting_issues_export_limit: エクスポートする課題数の上限
+  setting_cross_project_issue_relations: 異なるプロジェクトの課題間で関連の設定を許可
+  setting_issue_list_default_columns: 課題の一覧で表示する項目
+  setting_display_subprojects_issues: サブプロジェクトの課題をメインプロジェクトに表示する
+  setting_issue_done_ratio_issue_field: 課題のフィールドを使用
+  setting_issue_done_ratio_issue_status: 課題のステータスに連動
+  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になる分類
+  permission_manage_categories: 課題のカテゴリの管理
+  permission_view_issues: 課題の閲覧
+  permission_add_issues: 課題の追加
+  permission_edit_issues: 課題の編集
+  permission_manage_issue_relations: 関連する課題の管理
+  permission_delete_issues: 課題の削除
+  permission_view_news: お知らせの閲覧
+  permission_manage_news: お知らせの管理
+  permission_comment_news: お知らせへのコメント
+  permission_view_documents: ドキュメントの閲覧
+  permission_manage_subtasks: 子課題の管理
+  project_module_issue_tracking: 課題管理
+  project_module_news: お知らせ
+  project_module_documents: ドキュメント
+  label_issue: 課題
+  label_issue_new: 新しい課題
+  label_issue_plural: 課題
+  label_issue_view_all: すべての課題を表示
+  label_issues_by: "%{value} 別の課題"
+  label_issue_added: 課題の追加
+  label_issue_updated: 課題の更新
+  label_document: ドキュメント
+  label_document_new: 新しいドキュメント
+  label_document_plural: ドキュメント
+  label_document_added: ドキュメントの追加
+  label_tracker: 分類
+  label_tracker_plural: 分類
+  label_tracker_new: 新しい分類
+  label_issue_status: 課題のステータス
+  label_issue_status_plural: 課題のステータス
+  label_issue_category: 課題のカテゴリ
+  label_issue_category_plural: 課題のカテゴリ
+  label_reported_issues: 報告した課題
+  label_assigned_to_me_issues: 担当している課題
+  label_news: お知らせ
+  label_news_new: お知らせを追加
+  label_news_plural: お知らせ
+  label_news_latest: 最新お知らせ
+  label_news_view_all: すべてのお知らせを表示
+  label_news_added: お知らせの追加
+  label_news_comment_added: お知らせへのコメント追加
+  label_query: 検索条件
+  label_query_plural: 検索条件
+  label_query_new: 新しい検索条件
+  label_my_queries: マイ検索条件
+  label_roadmap_no_issues: このバージョンに関する課題はありません
+  label_issue_tracking: 課題管理
+  label_watched_issues: ウォッチしている課題
+  label_related_issues: 関連する課題
+  label_duplicates: 次の課題と重複
+  label_duplicated_by: 次の課題が重複
+  label_precedes: 次の課題に先行
+  label_follows: 次の課題に後続
+  label_bulk_edit_selected_issues: 課題の一括編集
+  label_display_used_statuses_only: この分類で使用中のステータスのみ表示
+  label_subtask_plural: 子課題
+  label_project_copy_notifications: コピーした課題のメール通知を送信する
+  button_annotate: 注釈
+  text_workflow_edit: ワークフローを編集するロールと分類を選んでください
+  text_tip_issue_begin_day: この日に開始する課題
+  text_tip_issue_end_day: この日に終了する課題
+  text_tip_issue_begin_end_day: この日に開始・終了する課題
+  text_tracker_no_workflow: この分類にワークフローが定義されていません
+  text_issues_ref_in_commit_messages: コミットメッセージ内で課題の参照/修正
+  text_issue_added: "課題 %{id} を %{author} さんが作成しました。"
+  text_issue_updated: "課題 %{id} を %{author} さんが更新しました。"
+  text_issue_category_destroy_question: "%{count}件の課題がこのカテゴリに割り当てられています。"
+  text_issue_category_reassign_to: 課題をこのカテゴリに再割り当てする
+  text_user_mail_option: "未選択のプロジェクトでは、ウォッチ中または自分が関係しているもの(例: 自分が作成または担当している課題)のみメールが送信されます。"
+  text_no_configuration_data: "ロール、分類、課題のステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
+  text_issues_destroy_confirmation: '本当に選択した課題を削除しますか？'
+  text_destroy_time_entries_question: この課題の%{hours}時間分の作業記録の扱いを選択してください。
+  text_reassign_time_entries: '記録された作業時間をこの課題に再割り当て：'
+  default_doc_category_user: ユーザードキュメント
+  default_doc_category_tech: 技術ドキュメント
+  enumeration_issue_priorities: 課題の優先度
+  enumeration_doc_categories: ドキュメントカテゴリ
+  label_additional_workflow_transitions_for_assignee: 課題担当者に追加で許可する遷移
+  label_additional_workflow_transitions_for_author: 課題作成者に追加で許可する遷移
+  label_issues_visibility_own: 作成者か担当者である課題
+  field_issues_visibility: 表示できる課題
+  label_issues_visibility_all: すべての課題
+  permission_set_own_issues_private: 自分が追加した課題の下書き設定
+  field_is_private: 下書き
+  permission_set_issues_private: 課題の下書き設定
+  label_issues_visibility_public: 下書き課題以外
+  text_issues_destroy_descendants_confirmation: "%{count}個の子課題も削除されます。"
+  notice_issue_successful_create: 課題 %{id} が作成されました。
+  setting_issue_group_assignment: グループへの課題割り当てを許可
+  error_scm_annotate_big_text_file: テキストファイルサイズの上限を超えているため注釈できません。
+  setting_default_issue_start_date_to_creation_date: 現在の日付を新しい課題の開始日とする
+  label_x_issues:
+    zero: 0 課題
+    one: 1 課題
+    other: "%{count} 課題"
+  setting_commit_cross_project_ref: 異なるプロジェクトの課題の参照/修正を許可
+  notice_issue_update_conflict: この課題を編集中に他のユーザーが更新しました。
+  permission_manage_related_issues: リビジョンと課題の関連の管理
+  label_copy_subtasks: 子課題をコピー
+  label_any_issues_in_project: 次のプロジェクト内の課題
+  label_any_issues_not_in_project: 次のプロジェクト外の課題
+  field_private_notes: 下書きコメント
+  permission_view_private_notes: 下書きコメントの閲覧
+  permission_set_notes_private: コメントの下書き設定
+  label_no_issues_in_project: 次のプロジェクト内の課題を除く
+  setting_cross_project_subtasks: 異なるプロジェクトの課題間の親子関係を許可
+  label_attribute_of_issue: 課題の %{name}
+  permission_add_documents: ドキュメントの追加
+  permission_edit_documents: ドキュメントの編集
+  permission_delete_documents: ドキュメントの削除
+  setting_link_copied_issue: 課題をコピーしたときに関連を設定
+  label_link_copied_issue: コピーした課題に関連を設定
+  label_search_open_issues_only: 未完了の課題のみ
+  permission_copy_issues: 課題のコピー
+  label_parent_task_attributes: 親課題の値の算出方法
+  label_parent_task_attributes_derived: 子課題の値から算出
+  label_parent_task_attributes_independent: 子課題から独立
+  permission_import_issues: 課題のインポート
+  label_import_issues: 課題のインポート
+  label_assigned_issues: 担当している課題
+  label_any_open_issues: 未完了の課題
+  label_no_open_issues: なし または完了した課題
+  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトには課題の追加が許可されている分類がありません
+  label_tracker_all: すべての分類
+  label_new_project_issue_tab_enabled: '"新しい課題" タブを表示'
+  error_no_projects_with_tracker_allowed_for_new_issue: 課題を追加できるプロジェクトがありません
+  error_move_of_child_not_possible: '子課題 %{child} を指定されたプロジェクトに移動できませんでした: %{errors}'
+  error_cannot_reassign_time_entries_to_an_issue_about_to_be_deleted: 削除対象課題への作業時間の再割り当てはできません
+  warning_fields_cleared_on_bulk_edit: この編集操作により次のフィールドの値が課題から削除されます
+  setting_close_duplicate_issues: 重複している課題を連動して終了
+  text_status_no_workflow: このステータスはどの分類のワークフローでも使われていません
+  label_trackers_description: 分類の説明
+  label_open_trackers_description: すべての分類の説明を表示
+  field_parent_issue_subject: 親課題の題名
+  permission_edit_own_issues: 自分が追加した課題の編集
+  text_select_apply_tracker: この分類を適用
+  label_updated_issues: 更新した課題
+  field_history_default_tab: 課題の履歴のデフォルトタブ
+  label_user_mail_notify_about_high_priority_issues_html: 優先度が <em>%{prio}</em> 以上の課題についても通知
+  notice_issue_not_closable_by_open_tasks: 未完了の子課題があるためこの課題は完了にできません。
+  notice_issue_not_closable_by_blocking_issue: 未完了のブロック元課題があるためこの課題は完了にできません。
+  notice_issue_not_reopenable_by_closed_parent_issue: 親課題が完了しているためこの課題は未完了に戻せません。
+  button_add_subtask: 子課題を追加
+  label_subtask: 子課題
+  label_auto_watch_on_issue_contributed_to: 自分が更新した課題
+  label_auto_watch_on_issue_created: 自分が作成した課題
+  button_apply_issues_filter: 課題のフィルタを適用
+  label_view_previous_annotation: この更新以前の注釈
+  ## Redmine 6以降
+  # setting_copy_attachments_on_issue_copy: 課題をコピーするとき添付ファイルもコピー
+
+## --------------------
+## view customizeプラグイン
+## --------------------
+# redmine_reimport_view_customize: true
+redmine_view_customize:
+  - name: リセット用CSS
+    code: <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css">
+    path_pattern: ".*"
+    insertion_position: html_head
+    customize_type: html
+    is_enabled: false
+
+## --------------------
+## グローバルチケットテンプレート
+## --------------------
+# redmine_reimport_issue_template: true
+redmine_issue_templates:
+  - tracker: 不具合
+    name: デフォルト
+    description: "{{ lookup('file', 'files/template/issue/bug.md') }}"
+    is_default: true
+    enabled: true
+    position: 1
+  - tracker: 問い合わせ
+    name: 仕様確認
+    issue_title: 〇〇機能の仕様について確認です
+    description: "{{ lookup('file', 'files/template/issue/inquiry.md') }}"
+    is_default: false
+    enabled: true
+    position: 2
+
+## --------------------
+## グローバルノートテンプレート
+## --------------------
+# redmine_reimport_note_template: true
+redmine_note_templates:
+  - tracker: タスク
+    name: レビュー結果
+    description: "{{ lookup('file', 'files/template/note/review.md') }}"
+    enabled: true

@@ -1,0 +1,25 @@
+---
+- name: Set upload file variables
+  ansible.builtin.set_fact:
+    attachment_hash: "{{ attachment.file | hash('sha256') }}"
+    attachment_ext: "{{ (attachment.file | basename).split('.')[-1] }}"
+- name: Set remote file path variable
+  ansible.builtin.set_fact:
+    attachment_remote_file: "{{ redmine_tmp_dir }}/{{ attachment_hash }}.{{ attachment_ext }}"
+- name: Upload attachment file
+  ansible.builtin.copy:
+    src: "{{ attachment.file }}"
+    dest: "{{ attachment_remote_file }}"
+    mode: "0644"
+    remote_src: "{{ attachment.remote_file | default(true) }}"
+- name: Appemd uploaded_attachments variable
+  ansible.builtin.set_fact:
+    uploaded_attachments: "{{ uploaded_attachments | default([]) + [uploaded_attachment] }}"
+  vars:
+    uploaded_attachment:
+      file: "{{ attachment_remote_file }}"
+      project: "{{ attachment.project }}"
+      wiki: "{{ attachment.wiki | default(None) }}"
+      local_file: "{{ attachment.file }}"
+      filename: "{{ attachment.filename | default(None) }}"
+      description: "{{ attachment.description | default(None) }}"

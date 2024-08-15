@@ -1,0 +1,34 @@
+---
+- name: Create document directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ document_base_dir }}"
+    - "{{ document_asset_dir }}"
+    - "{{ document_asset_image_dir }}"
+    - "{{ document_asset_font_dir }}"
+    - "{{ document_asset_css_dir }}"
+    - "{{ document_asset_js_dir }}"
+- name: Import webfont task
+  ansible.builtin.import_tasks:
+    file: webfont.yml
+- name: Import database document task
+  ansible.builtin.import_tasks:
+    file: database.yml
+- name: Import ER diagram document task
+  ansible.builtin.import_tasks:
+    file: erd.yml
+- name: Import routing document task
+  ansible.builtin.import_tasks:
+    file: routes.yml
+- name: Import Rake task document task
+  ansible.builtin.import_tasks:
+    file: rake_task.yml
+- name: Import API document task
+  ansible.builtin.import_tasks:
+    file: api.yml
+- name: Import MkDocs task
+  ansible.builtin.import_tasks:
+    file: mkdocs.yml
