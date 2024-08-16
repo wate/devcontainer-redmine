@@ -560,13 +560,9 @@ namespace :redmine do
           # プロポーショナル
           'proportional'
         ]
-        users.each do |data|
-          next unless data.key?('login')
-
-          user = User.find_by_login(data['login'])
+        users.each do |login, data|
+          user = User.find_by_login(login)
           if user
-            next if user.id == 1
-
             # 既存ユーザー情報の更新
             user.firstname = data['firstname'] if data.key?('firstname')
             user.lastname = data['lastname'] if data.key?('lastname')
@@ -578,7 +574,7 @@ namespace :redmine do
           else
             # ユーザーの新規登録
             user = User.new(:language => Setting.default_language, :mail_notification => Setting.default_notification_option)
-            user.login = data['login']
+            user.login = login
             # 名
             user.firstname = data['firstname']
             # 姓
