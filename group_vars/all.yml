@@ -10,11 +10,9 @@ wakatime_api_key: "{{ lookup('env', 'WAKATIME_API_KEY') }}"
 ## Redmineの追加環境設定
 # redmine_additional_environment: |
 #   config.logger = Logger.new('/dev/null')
-#   config.paths['app/controllers'] = ['customize/controllers', 'app/controllers']
-#   config.paths['app/models'] = ['customize/models', 'app/models']
 #   config.paths['app/views'] = ['customize/views', 'app/views']
 #   config.paths['app/helpers'] = ['customize/helpers', 'app/helpers']
-#   # config.paths['lib/tasks'] = ['customize/tasks', 'lib/tasks']
+#   config.paths['lib/tasks'] = ['customize/tasks', 'lib/tasks']
 
 ## --------------------
 ## プラグイン

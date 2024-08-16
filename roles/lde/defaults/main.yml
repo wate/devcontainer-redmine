@@ -25,7 +25,7 @@ lde_git_gitignore: |
   /.vscode/
   /.yardoc/
   /.tbls.yml
-  /mkdocs.yml
+  /customize
   /lib/tasks/import.rake
   /lib/tasks/export.rake
   /doc/app/

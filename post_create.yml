@@ -27,3 +27,12 @@
       when: ansible_facts.system == "Linux"
       tags: role_vscode
   tasks: []
+    # - name: Redmine customize directories
+    #   ansible.builtin.file:
+    #     path: "{{ base_dir }}/customize"
+    #     state: directory
+    #     mode: "0755"
+    #   loop:
+    #     - helpers
+    #     - views
+    #     - tasks
