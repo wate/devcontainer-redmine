@@ -87,19 +87,22 @@
         - "{{ base_dir }}/db/schema.rb"
         - "{{ base_dir }}/lib/tasks/import.rake"
         - "{{ base_dir }}/lib/tasks/export.rake"
+    - name: 生成済みのドキュメントを抽出
+      ansible.builtin.find:
+        paths:
+          - "{{ base_dir }}/doc"
+        pattern:
+          - "*.md"
+      register: geneted_docs
     - name: 自動生成した各種ドキュメントを削除
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
-      loop:
-        - "{{ base_dir }}/doc/index.md"
-        - "{{ base_dir }}/doc/SUMMARY.md"
-        - "{{ base_dir }}/doc/erd.md"
-        - "{{ base_dir }}/doc/rake_task.md"
-        - "{{ base_dir }}/doc/routes.md"
-        - "{{ base_dir }}/doc/app"
-        - "{{ base_dir }}/doc/assets"
-        - "{{ base_dir }}/doc/schema"
+      loop: "{{ (geneted_docs.files | map(attribute='path')) + append_removed_paths }}"
+      vars:
+        append_removed_paths:
+          - "{{ base_dir }}/doc/app"
+          - "{{ base_dir }}/doc/schema"
     - name: VSCodeの設定を削除
       ansible.builtin.file:
         path: "{{ base_dir }}/.vscode"

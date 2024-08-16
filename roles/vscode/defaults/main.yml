@@ -1,5 +1,8 @@
 ---
-vscode_task_clear_lde_command: ansible-playbook .devcontainer/clear_lde.yml -i localhost, -c local
+vscode_task_clear_lde_command: >
+  cd .devcontainer
+  &&
+  ansible-playbook clear_lde.yml
 vscode_task_post_create_command: bash .devcontainer/post_create.sh
 vscode_task_post_start_command: bash .devcontainer/post_start.sh
 

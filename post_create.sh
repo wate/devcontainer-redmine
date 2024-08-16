@@ -11,9 +11,9 @@ fi
 if [ -e "${PWD}/.devcontainer/post_create.yml" ]; then
   cd "${PWD}/.devcontainer" || exit 1
   if [ -n "${ANSIBLE_POST_CREATE_TAGS}" ]; then
-    ansible-playbook post_create.yml -i localhost, -c local --tags "${ANSIBLE_POST_CREATE_TAGS}"
+    ansible-playbook post_create.yml --tags "${ANSIBLE_POST_CREATE_TAGS}"
   else
-    ansible-playbook post_create.yml -i localhost, -c local
+    ansible-playbook post_create.yml
   fi
 fi
 
