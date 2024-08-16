@@ -332,8 +332,8 @@
         or
         redmine_reimport_note_template | default(false)
     - name: Update Redmine settings
-      environment:
-        IMPORT_DATA_FILE_NO_DELETE: 1
+      # environment:
+      #   IMPORT_DATA_FILE_NO_DELETE: 1
       ansible.builtin.command:
         cmd: bundle exec rake redmine:import
         chdir: "{{ redmine_root }}"

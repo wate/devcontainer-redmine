@@ -3,28 +3,35 @@
   become: false
   gather_facts: false
   tasks:
-    - name: 実行中のマシン情報を取得
-      ansible.builtin.setup:
-        gather_subset:
-          - system
-      become: true
-    - name: データベースをクリア
-      when: ansible_facts.system == 'Linux'
-      block:
-        - name: データベースを削除
-          ansible.builtin.command:
-            cmd: bundle exec rake db:drop
-            chdir: "{{ base_dir }}"
-        - name: データベースを作成
-          ansible.builtin.command:
-            cmd: bundle exec rake db:create
-            chdir: "{{ base_dir }}"
+    # - name: 実行中のマシン情報を取得
+    #   ansible.builtin.setup:
+    #     gather_subset:
+    #       - system
+    #   become: true
+    # - name: データベースをクリア
+    #   when: ansible_facts.system == 'Linux'
+    #   block:
+    #     - name: データベースを削除
+    #       ansible.builtin.command:
+    #         cmd: bundle exec rake db:drop
+    #         chdir: "{{ base_dir }}"
+    #     - name: データベースを作成
+    #       ansible.builtin.command:
+    #         cmd: bundle exec rake db:create
+    #         chdir: "{{ base_dir }}"
+    - name: themesディレクトリの存在確認
+      ansible.builtin.stat:
+        path: "{{ base_dir }}/themes"
+      register: themes_dir_stat_result
+    - name: 削除対象のテーマ抽出用の変数を設定
+      ansible.builtin.set_fact:
+        redmine_theme_dir: "{{ base_dir }}/{{ themes_dir_stat_result.stat.exists | ternary('themes', 'public/themes') }}"
+        theme_exclude_patterns: "{{ themes_dir_stat_result.stat.exists | ternary(None, ['alternate', 'classic']) }}"
     - name: インストール済みのテーマを抽出
       ansible.builtin.find:
-        paths:
-          - "{{ base_dir }}/themes"
-          - "{{ base_dir }}/public/themes"
+        paths: "{{ redmine_theme_dir }}"
         file_type: directory
+        excludes: "{{ theme_exclude_patterns }}"
       register: installed_theme_result
     - name: インストール済みのテーマを削除
       ansible.builtin.file:
