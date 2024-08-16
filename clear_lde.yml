@@ -70,6 +70,7 @@
         state: absent
       loop:
         - "{{ base_dir }}/.editorconfig"
+        - "{{ base_dir }}/.ruby-lsp"
         - "{{ base_dir }}/.env"
         - "{{ base_dir }}/.envrc"
         - "{{ base_dir }}/.erdconfig"

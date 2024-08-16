@@ -21,7 +21,10 @@
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
     "WAKATIME_API_KEY": "${localEnv:WAKATIME_API_KEY}"
   },
-  "forwardPorts": [3000, 8025],
+  "forwardPorts": [
+    3000,
+    8025
+  ],
   "postCreateCommand": "/usr/bin/bash .devcontainer/post_create.sh",
   "postStartCommand": "/usr/bin/bash .devcontainer/post_start.sh",
   "customizations": {
@@ -51,8 +54,7 @@
           ],
           "includedPatterns": [
             "**/bin/**",
-            "**/tasks/**.rake",
-            ".devcontainer/roles/redmine/files/**"
+            "**/tasks/**.rake"
           ]
         }
       }
