@@ -9,10 +9,16 @@
           - system
       become: true
     - name: データベースをリセット
-      ansible.builtin.command:
-        cmd: bundle exec rake db:reset
-        chdir: "{{ base_dir }}"
       when: ansible_facts.system == 'Linux'
+      block:
+        - name: データベースを削除
+          ansible.builtin.command:
+            cmd: bundle exec rake db:drop
+            chdir: "{{ base_dir }}"
+        - name: データベースを作成
+          ansible.builtin.command:
+            cmd: bundle exec rake db:create
+            chdir: "{{ base_dir }}"
     - name: themesディレクトリの存在確認
       ansible.builtin.stat:
         path: "{{ base_dir }}/themes"
