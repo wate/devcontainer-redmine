@@ -366,6 +366,13 @@ namespace :redmine do
           core_setting['default_projects_tracker_ids'] = Tracker.where(name: core_setting['default_projects_trackers']).pluck(:id).map { |item| item.to_s }
           core_setting.delete('default_projects_trackers')
         end
+        if core_setting.key?('new_project_user_role') && core_setting['new_project_user_role'].present?
+          assigne_role = Role.find_by_name(core_setting['new_project_user_role'])
+          if assigne_role
+            core_setting['new_project_user_role_id'] = assigne_role.id
+          end
+          core_setting.delete('new_project_user_role')
+        end
         if core_setting.present?
           Setting.set_all_from_params(core_setting)
           puts "\n### Core setting\n"
@@ -708,7 +715,7 @@ namespace :redmine do
           unless project_query
             project_query = ProjectQuery.new({name: data['name']})
             project_query.visibility = Query::VISIBILITY_PUBLIC
-            project_query.user = User.current
+            project_query.user = User.find_by_id(1)
           end
           project_query.name = data['name']
           project_query.project = nil
@@ -908,7 +915,7 @@ namespace :redmine do
               template.link_title = data['link_title'] if data.key?('link_title')
               ## 表示順序
               template.position = data['position'] if data.key?('position')
-              template.author = User.current if template.new_record?
+              template.author = User.find_by_id(1) if template.new_record?
               template.save!
               puts "* #{template.title}"
             end
@@ -950,7 +957,7 @@ namespace :redmine do
               end
               ## 表示位置
               template.position = data['position'] if data.key?('position')
-              template.author = User.current if template.new_record?
+              template.author = User.find_by_id(1) if template.new_record?
               template.save!
               puts "* #{template.name}"
             end
@@ -1227,7 +1234,7 @@ namespace :redmine do
       elsif data.instance_of?(Hash) && data['content']
         content.text = data['content']
       end
-      content.author = User.current
+      content.author = User.find_by_id(1)
       wiki_page.save_with_content(content)
       wiki_page.save!
       puts "* " + wiki_page.title
@@ -1260,7 +1267,7 @@ namespace :redmine do
       issue_query.visibility = Query::VISIBILITY_PUBLIC
       # 全プロジェクト向け
       issue_query.project = project
-      issue_query.user = User.current
+      issue_query.user = User.find_by_id(1)
     end
     ## 名前
     issue_query.name = data['name']
@@ -1345,7 +1352,7 @@ namespace :redmine do
     end
     attachment_count = Attachment.where({container: container, filename: filename, digest: digest}).count
     if attachment_count == 0
-      attachment = Attachment.new({container: container, author: User.current})
+      attachment = Attachment.new({container: container, author: User.find_by_id(1)})
       attachment.file = File.open(data['file'])
       attachment.filename = filename
       if data.key?('description') && data['description'].present?
