@@ -55,7 +55,7 @@
       register: gitignore_result
     - name: .gitignoreの変更の無視する設定を解除
       ansible.builtin.command:
-        cmd: git update-index --no-skip-worktree .gitignore
+        cmd: git update-index --no-assume-unchanged .gitignore
         chdir: "{{ base_dir }}"
     - name: Redmineの設定ファイルを削除
       ansible.builtin.file:
@@ -66,7 +66,7 @@
         - "{{ base_dir }}/.env"
         - "{{ base_dir }}/.envrc"
         - "{{ base_dir }}/.erdconfig"
-        - "{{ base_dir }}/.tbls"
+        - "{{ base_dir }}/.tbls.yml"
         - "{{ base_dir }}/mkdocs.yml"
         - "{{ base_dir }}/Gemfile.local"
         - "{{ base_dir }}/Gemfile.lock"
