@@ -9,7 +9,7 @@
     - name: Git管理下から除外するファイルの設定を追加
       ansible.builtin.blockinfile:
         path: "{{ base_dir }}/.gitignore"
-        content: "{{ lde_git_gitignore }}"
+        content: "{{ lde_git_append_gitignore }}"
       register: gitignore_result
     - name: .gitignoreの変更を無視するように設定
       ansible.builtin.command:

@@ -15,7 +15,7 @@ lde_runn_version: latest
 
 lde_pict_install: false
 
-lde_git_gitignore: |
+lde_git_append_gitignore: |
   /.devcontainer/
   /.ruby-lsp/
   /.editorconfig
@@ -25,6 +25,7 @@ lde_git_gitignore: |
   /.vscode/
   /.yardoc/
   /.tbls.yml
+  /mkdocs.yml
   /customize
   /lib/tasks/import.rake
   /lib/tasks/export.rake

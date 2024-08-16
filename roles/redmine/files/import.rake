@@ -264,7 +264,7 @@ namespace :redmine do
           else
             priority = IssuePriority.find_by_name(data['name'])
           end
-          priority ||= IssuePriority.new({active: ture})
+          priority ||= IssuePriority.new({active: true})
           import_enumeration priority, data
         end
       end
