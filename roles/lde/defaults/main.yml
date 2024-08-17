@@ -47,6 +47,8 @@ lde_git_append_gitignore: |
   /.tbls.yml
   /mkdocs.yml
   /package.json
+  /package-lock.json
+  /pnpm-lock.yaml
   /customize
   /lib/tasks/import.rake
   /lib/tasks/export.rake

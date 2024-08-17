@@ -60,10 +60,15 @@
         path: "{{ base_dir }}/.gitignore"
         state: absent
       register: gitignore_result
-    - name: .gitignoreの変更の無視する設定を解除
+    - name: .gitignoreの変更変更を無視する設定を解除
       ansible.builtin.command:
-        cmd: git update-index --no-assume-unchanged .gitignore
+        cmd: git update-index --no-assume-unchanged {{ item }}
         chdir: "{{ base_dir }}"
+      loop: "{{ git_assume_unchanged_files | default(['.gitignore']) }}"
+    # - name: Git管理下のファイルの変更を(ハード)リセット
+    #   ansible.builtin.command:
+    #     cmd: git reset --hard
+    #     chdir: "{{ base_dir }}"
     - name: Redmineの設定ファイルを削除
       ansible.builtin.file:
         path: "{{ item }}"
@@ -87,6 +92,9 @@
         - "{{ base_dir }}/db/schema.rb"
         - "{{ base_dir }}/lib/tasks/import.rake"
         - "{{ base_dir }}/lib/tasks/export.rake"
+        - "{{ base_dir }}/node_modules"
+        - "{{ base_dir }}/package-lock.json"
+        - "{{ base_dir }}/pnpm-lock.yaml"
     - name: 生成済みのドキュメントを抽出
       ansible.builtin.find:
         paths:

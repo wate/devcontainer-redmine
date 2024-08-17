@@ -1,15 +1,18 @@
-- name: yarnのインストール
-  community.general.npm:
-    name: yarn
-    global: true
-    state: latest
-- name: pnpmのインストール
-  community.general.npm:
-    name: pnpm
-    global: true
-    state: latest
-- name: niのインストール
-  community.general.npm:
-    name: "@antfu/ni"
-    global: true
-    state: latest
+- name: yarn/pnpm/niのインストール
+  become: true
+  block:
+    - name: yarnのインストール
+      community.general.npm:
+        name: yarn
+        global: true
+        state: latest
+    - name: pnpmのインストール
+      community.general.npm:
+        name: pnpm
+        global: true
+        state: latest
+    - name: niのインストール
+      community.general.npm:
+        name: "@antfu/ni"
+        global: true
+        state: latest

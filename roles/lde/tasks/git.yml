@@ -1,18 +1,11 @@
 ---
-- name: .gitignoreが存在するか確認
-  ansible.builtin.stat:
+- name: Git管理下から除外するファイルの設定を追加
+  ansible.builtin.blockinfile:
     path: "{{ base_dir }}/.gitignore"
-  register: gitignore_stat_result
-- name: gitの除外設定の追記と.gitignore自体の変更を無視するように設定を変更
-  when: gitignore_stat_result.stat.exists
-  block:
-    - name: Git管理下から除外するファイルの設定を追加
-      ansible.builtin.blockinfile:
-        path: "{{ base_dir }}/.gitignore"
-        content: "{{ lde_git_append_gitignore }}"
-      register: gitignore_result
-    - name: .gitignoreの変更を無視するように設定
-      ansible.builtin.command:
-        cmd: git update-index --assume-unchanged .gitignore
-        chdir: "{{ base_dir }}"
-      when: gitignore_result is changed
+    content: "{{ lde_git_append_gitignore }}"
+  register: gitignore_result
+- name: git管理下のファイルの変更を無視するように設定
+  ansible.builtin.command:
+    cmd: git update-index --assume-unchanged {{ item }}
+    chdir: "{{ base_dir }}"
+  loop: "{{ git_assume_unchanged_files | default(['.gitignore']) }}"

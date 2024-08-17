@@ -13,8 +13,7 @@ services:
       - mariadb
       - mailpit
       # - redis
-      # - postgres
-      # - memcached
+      # - meilisearch
   mariadb:
     image: mariadb:10.11
     restart: unless-stopped
@@ -37,11 +36,18 @@ services:
   #   restart: unless-stopped
   #   volumes:
   #     - redis-data:/data
-  # memcached:
-  #   image: memcached:latest
+  # meilisearch:
+  #   image: getmeili/meilisearch:v1.9
   #   restart: unless-stopped
-  #   command: ["-m", "1024"]
+  #   volumes:
+  #     - meilisearch-data:/meili_data
+  #   environment:
+  #     TZ: Asia/tokyo
+  #     MASTER_KEY: MASTER_KEY
+  #   ports:
+  #     - "7700:7700"
 
 volumes:
   mariadb-data:
   redis-data:
+  meilisearch-data:

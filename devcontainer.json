@@ -23,7 +23,8 @@
   },
   "forwardPorts": [
     3000,
-    8025
+    8025,
+    7700
   ],
   "postCreateCommand": "/usr/bin/bash .devcontainer/post_create.sh",
   "postStartCommand": "/usr/bin/bash .devcontainer/post_start.sh",

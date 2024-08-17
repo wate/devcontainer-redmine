@@ -1,6 +1,9 @@
 ---
 base_dir: "{{ playbook_dir | dirname }}"
 wakatime_api_key: "{{ lookup('env', 'WAKATIME_API_KEY') }}"
+git_assume_unchanged_files:
+  - .gitignore
+  - yarn.lock
 
 ## --------------------
 ## プラグイン
