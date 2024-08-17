@@ -31,6 +31,9 @@
 - name: MariaDBのセットアップ
   ansible.builtin.import_tasks:
     file: mariadb.yml
+- name: node.js関連のパッケージのインストール
+  ansible.builtin.import_tasks:
+    file: nodejs.yml
 - name: mycliのセットアップ
   ansible.builtin.import_tasks:
     file: mycli.yml

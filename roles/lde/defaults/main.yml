@@ -46,6 +46,7 @@ lde_git_append_gitignore: |
   /.yardoc/
   /.tbls.yml
   /mkdocs.yml
+  /package.json
   /customize
   /lib/tasks/import.rake
   /lib/tasks/export.rake
