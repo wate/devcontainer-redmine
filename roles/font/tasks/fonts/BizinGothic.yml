@@ -36,14 +36,14 @@
         - name: Set package version variable
           ansible.builtin.set_fact:
             font_bizingothic_version: "{{ latest_releases.json.tag_name }}"
-    - name: Install BizinGothic font file
+    - name: Install BizinGothic font
       ansible.builtin.unarchive:
         src: https://github.com/{{ font_bizingothic_repo }}/releases/download/{{ font_bizingothic_version }}/BizinGothic_{{ font_bizingothic_version }}.zip
         dest: "{{ font_dir }}/BizinGothic"
         extra_opts:
           - -j
         remote_src: true
-    - name: Install BizinGothic Discord font file
+    - name: Install BizinGothic Discord font
       ansible.builtin.unarchive:
         src: https://github.com/{{ font_bizingothic_repo }}/releases/download/{{ font_bizingothic_version }}/BizinGothicDiscord_{{ font_bizingothic_version }}.zip
         dest: "{{ font_dir }}/BizinGothicDiscord"

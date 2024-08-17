@@ -1,18 +1,38 @@
 ---
 lde_tbls_version: latest
 
+## -----------------
+## git-deltaをインストールするか否か
+## https://github.com/dandavison/delta
+## -----------------
 lde_git_delta_install: true
 lde_git_delta_version: latest
 
+## -----------------
+## d2をインストールするか否か
+## https://d2lang.com/
+## -----------------
 lde_d2_install: true
 lde_d2_version: latest
 
+## -----------------
+## pandocをインストールするか否か
+## https://pandoc.org/
+## -----------------
 lde_pandoc_install: false
 lde_pandoc_version: latest
 
+## -----------------
+## runnをインストールするか否か
+## https://github.com/k1LoW/runn
+## -----------------
 lde_runn_install: false
 lde_runn_version: latest
 
+## -----------------
+## pictをインストールするか否か
+## https://github.com/microsoft/pict
+## -----------------
 lde_pict_install: false
 
 lde_git_append_gitignore: |

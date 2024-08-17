@@ -8,7 +8,10 @@ document_asset_font_dir: "{{ document_asset_dir }}/fonts"
 document_asset_css_dir: "{{ document_asset_dir }}/stylesheets"
 document_asset_js_dir: "{{ document_asset_dir }}/javascripts"
 
+## -----------------
+## rails-erdの設定
 ## @see https://voormedia.github.io/rails-erd/customise.html
+## -----------------
 document_erd_cfg:
   title: Redmine domain model
   filename: "{{ document_asset_image_dir | relpath(base_dir) }}/erd"
@@ -33,32 +36,46 @@ document_erd_cfg:
   cluster: true
   splines: spline
 
-### データベースドキュメント生成コマンド
+## -----------------
+## データベースドキュメント生成コマンド
+## -----------------
 document_generate_database_document_command: tbls doc -c .tbls.yml --rm-dist --adjust-table
 
-### サブセットフォントに含める文字のテキストファイル保存先
+## -----------------
+## サブセットフォントに含める文字のテキストファイル保存先
+## -----------------
 document_subset_font_text_file_path: "{{ document_asset_font_dir }}/subset.txt"
 
-### Webフォントファイルの強制更新
+## -----------------
+## Webフォントファイルの強制更新
+## -----------------
 document_force_update_web_font: false
 
-### CSSファイルの冒頭に出力するライセンス用テキスト
+## -----------------
+## CSSファイルの冒頭に出力するライセンス用テキスト
+## -----------------
 document_css_output_license_text: |
   "白源/HackGen" are licensed under SIL OPEN FONT LICENSE Version 1.1.
   https://github.com/yuru7/HackGen
   "Bizin Gothic" are licensed under SIL OPEN FONT LICENSE Version 1.1.
   https://github.com/yuru7/bizin-gothic
 
-### Webフォント化するフォントファイルの出力ファイル名のプレフィックス
+## -----------------
+## Webフォント化するフォントファイルの出力ファイル名のプレフィックス
+## -----------------
 document_webfont_file_prefix: CodeFont
 
+## -----------------
 ## CSS出力時の初期値
+## -----------------
 document_webfont_css_default:
   style: normal
   weight: normal
   display: swap
 
-### Webフォント化するファイルの一覧
+## -----------------
+## Webフォント化するファイルの一覧
+## -----------------
 document_webfont_files:
   ## HackGen
   - src: /usr/local/share/fonts/HackGen/HackGen-Regular.ttf

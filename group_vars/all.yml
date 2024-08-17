@@ -2,17 +2,6 @@
 base_dir: "{{ playbook_dir | dirname }}"
 wakatime_api_key: "{{ lookup('env', 'WAKATIME_API_KEY') }}"
 
-# redmine_cfg:
-#   default:
-#     sudo_mode: true
-#     sudo_mode_timeout: 15
-
-## Redmineの追加環境設定
-# redmine_additional_environment: |
-#   config.logger = Logger.new('/dev/null')
-#   config.paths['app/views'] = ['customize/views', 'app/views']
-#   config.paths['lib/tasks'] = ['customize/tasks', 'lib/tasks']
-
 ## --------------------
 ## プラグイン
 ## --------------------
@@ -43,6 +32,17 @@ redmine_themes: {}
   # bleuclair:
   #   repo: https://github.com/farend/redmine_theme_farend_bleuclair.git
   #   version: support-propshaft
+
+# redmine_cfg:
+#   default:
+#     sudo_mode: true
+#     sudo_mode_timeout: 15
+
+## Redmineの追加環境設定
+# redmine_additional_environment: |
+#   config.logger = Logger.new('/dev/null')
+#   config.paths['app/views'] = ['customize/views', 'app/views']
+#   config.paths['lib/tasks'] = ['customize/tasks', 'lib/tasks']
 
 ## --------------------
 ## 全データの再インポート

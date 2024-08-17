@@ -36,7 +36,7 @@
     - name: Set asset file variable
       ansible.builtin.set_fact:
         asset_url: https://github.com/{{ font_plemoljp_repo }}/releases/download/{{ font_plemoljp_version }}/PlemolJP_{{ font_plemoljp_version }}.zip
-    - name: Install font file
+    - name: Install PlemolJP font
       ansible.builtin.unarchive:
         src: "{{ asset_url }}"
         dest: "{{ font_dir }}/PlemolJP"

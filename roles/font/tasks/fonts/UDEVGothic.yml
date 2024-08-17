@@ -36,7 +36,7 @@
     - name: Set asset file variable
       ansible.builtin.set_fact:
         asset_url: https://github.com/{{ font_udevgothic_repo }}/releases/download/{{ font_udevgothic_version }}/UDEVGothic_{{ font_udevgothic_version }}.zip
-    - name: Install font file
+    - name: Install UDEV Gothic font
       ansible.builtin.unarchive:
         src: "{{ asset_url }}"
         dest: "{{ font_dir }}/UDEVGothic"

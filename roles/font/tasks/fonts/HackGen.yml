@@ -36,7 +36,7 @@
     - name: Set asset file variable
       ansible.builtin.set_fact:
         asset_url: https://github.com/{{ font_hackgen_repo }}/releases/download/{{ font_hackgen_version }}/HackGen_{{ font_hackgen_version }}.zip
-    - name: Install font file
+    - name: Install HackGen font
       ansible.builtin.unarchive:
         src: "{{ asset_url }}"
         dest: "{{ font_dir }}/HackGen"

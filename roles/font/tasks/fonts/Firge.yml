@@ -37,7 +37,7 @@
       ansible.builtin.set_fact:
         asset_url: |-
           https://github.com/{{ font_firge_repo }}/releases/download/{{ font_firge_version }}/Firge_{{ font_firge_version }}.zip
-    - name: Install font file
+    - name: Install Firge fonte
       ansible.builtin.unarchive:
         src: "{{ asset_url }}"
         dest: "{{ font_dir }}/Firge"
