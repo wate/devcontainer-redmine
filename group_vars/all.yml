@@ -1549,89 +1549,36 @@ redmine_attachments:
 ## --------------------
 # 置換内容
 # ------------------
-# トラッカー => 分類
-# チケットトラッキング => 課題管理
-# チケット => 課題
+# トラッカー => チケット種別
 # 文書 => ドキュメント
 # ニュース => お知らせ
-# デフォルト値 => 初期値
-# プライベート => 下書き
+# カテゴリ => カテゴリー
 # カスタムクエリ => 検索条件
 # 新しいクエリ => 新しい検索条件
 # アノテート => 注釈
 # ------------------
 # redmine_reimport_message_customize: true
 redmine_message_customize:
-  activerecord:
-    errors:
-      messages:
-        cant_link_an_issue_with_a_descendant: "親子関係にある課題間での関連の設定はできません"
-        earlier_than_minimum_start_date: "を%{date}より前にすることはできません。先行する課題があります"
-        open_issue_with_closed_parent: "完了した課題に未完了の子課題を追加することはできません"
-  notice_failed_to_save_issues: "全%{total}件中%{count}件の課題が保存できませんでした: %{ids}。"
-  notice_issue_done_ratios_updated: 課題の進捗率を更新しました。
   error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
-  error_issue_not_found_in_project: '課題が見つかりません、もしくはこのプロジェクトに属していません'
-  error_unable_delete_issue_status: "課題のステータスを削除できませんでした。 (%{value})"
-  error_no_tracker_in_project: 'このプロジェクトには分類が登録されていません。プロジェクト設定を確認してください。'
-  error_no_default_issue_status: 'デフォルトの課題ステータスが定義されていません。設定を確認してください（管理→課題のステータス）。'
-  error_can_not_reopen_issue_on_closed_version: '終了したバージョンにひも付けされた課題の再オープンはできません。'
-  error_issue_done_ratios_not_updated: "課題の進捗率が更新できません。"
-  error_workflow_copy_source: 'コピー元となる分類またはロールを選択してください'
-  error_workflow_copy_target: 'コピー先となる分類とロールを選択してください'
-  error_can_not_delete_tracker: 'この分類は使用中です。削除できません。'
-  mail_subject_reminder: "%{count}件の課題の期日が%{days}日以内に到来します"
-  mail_body_reminder: "%{count}件の担当課題の期日が%{days}日以内に到来します:"
-  field_issue: 課題
-  field_is_closed: 終了した課題
-  field_is_default: 初期値
-  field_tracker: 分類
-  field_is_in_roadmap: 課題をロードマップに表示する
-  field_issue_to: 関連する課題
-  field_assignable: このロールのユーザーに課題を割り当て可能
-  field_default_value: 初期値
-  field_parent_issue: 親課題
-  setting_issues_export_limit: エクスポートする課題数の上限
-  setting_cross_project_issue_relations: 異なるプロジェクトの課題間で関連の設定を許可
-  setting_issue_list_default_columns: 課題の一覧で表示する項目
-  setting_display_subprojects_issues: サブプロジェクトの課題をメインプロジェクトに表示する
-  setting_issue_done_ratio_issue_field: 課題のフィールドを使用
-  setting_issue_done_ratio_issue_status: 課題のステータスに連動
-  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になる分類
-  permission_manage_categories: 課題のカテゴリの管理
-  permission_view_issues: 課題の閲覧
-  permission_add_issues: 課題の追加
-  permission_edit_issues: 課題の編集
-  permission_manage_issue_relations: 関連する課題の管理
-  permission_delete_issues: 課題の削除
+  error_no_tracker_in_project: 'このプロジェクトにはチケット種別が登録されていません。プロジェクト設定を確認してください。'
+  error_workflow_copy_source: 'コピー元となるチケット種別またはロールを選択してください'
+  error_workflow_copy_target: 'コピー先となるチケット種別とロールを選択してください'
+  error_can_not_delete_tracker: 'このチケット種別は使用中です。削除できません。'
+  field_tracker: チケット種別
+  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になるチケット種別
   permission_view_news: お知らせの閲覧
   permission_manage_news: お知らせの管理
   permission_comment_news: お知らせへのコメント
   permission_view_documents: ドキュメントの閲覧
-  permission_manage_subtasks: 子課題の管理
-  project_module_issue_tracking: 課題管理
   project_module_news: お知らせ
   project_module_documents: ドキュメント
-  label_issue: 課題
-  label_issue_new: 新しい課題
-  label_issue_plural: 課題
-  label_issue_view_all: すべての課題を表示
-  label_issues_by: "%{value} 別の課題"
-  label_issue_added: 課題の追加
-  label_issue_updated: 課題の更新
   label_document: ドキュメント
   label_document_new: 新しいドキュメント
   label_document_plural: ドキュメント
   label_document_added: ドキュメントの追加
-  label_tracker: 分類
-  label_tracker_plural: 分類
-  label_tracker_new: 新しい分類
-  label_issue_status: 課題のステータス
-  label_issue_status_plural: 課題のステータス
-  label_issue_category: 課題のカテゴリ
-  label_issue_category_plural: 課題のカテゴリ
-  label_reported_issues: 報告した課題
-  label_assigned_to_me_issues: 担当している課題
+  label_tracker: チケット種別
+  label_tracker_plural: チケット種別
+  label_tracker_new: 新しいチケット種別
   label_news: お知らせ
   label_news_new: お知らせを追加
   label_news_plural: お知らせ
@@ -1643,111 +1590,26 @@ redmine_message_customize:
   label_query_plural: 検索条件
   label_query_new: 新しい検索条件
   label_my_queries: マイ検索条件
-  label_roadmap_no_issues: このバージョンに関する課題はありません
-  label_issue_tracking: 課題管理
-  label_watched_issues: ウォッチしている課題
-  label_related_issues: 関連する課題
-  label_duplicates: 次の課題と重複
-  label_duplicated_by: 次の課題が重複
-  label_precedes: 次の課題に先行
-  label_follows: 次の課題に後続
-  label_bulk_edit_selected_issues: 課題の一括編集
-  label_display_used_statuses_only: この分類で使用中のステータスのみ表示
-  label_subtask_plural: 子課題
-  label_project_copy_notifications: コピーした課題のメール通知を送信する
+  label_display_used_statuses_only: このチケット種別で使用中のステータスのみ表示
   button_annotate: 注釈
-  text_workflow_edit: ワークフローを編集するロールと分類を選んでください
-  text_tip_issue_begin_day: この日に開始する課題
-  text_tip_issue_end_day: この日に終了する課題
-  text_tip_issue_begin_end_day: この日に開始・終了する課題
-  text_tracker_no_workflow: この分類にワークフローが定義されていません
-  text_issues_ref_in_commit_messages: コミットメッセージ内で課題の参照/修正
-  text_issue_added: "課題 %{id} を %{author} さんが作成しました。"
-  text_issue_updated: "課題 %{id} を %{author} さんが更新しました。"
-  text_issue_category_destroy_question: "%{count}件の課題がこのカテゴリに割り当てられています。"
-  text_issue_category_reassign_to: 課題をこのカテゴリに再割り当てする
-  text_user_mail_option: "未選択のプロジェクトでは、ウォッチ中または自分が関係しているもの(例: 自分が作成または担当している課題)のみメールが送信されます。"
-  text_no_configuration_data: "ロール、分類、課題のステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
-  text_issues_destroy_confirmation: '本当に選択した課題を削除しますか？'
-  text_destroy_time_entries_question: この課題の%{hours}時間分の作業記録の扱いを選択してください。
-  text_reassign_time_entries: '記録された作業時間をこの課題に再割り当て：'
+  text_workflow_edit: ワークフローを編集するロールとチケット種別を選んでください
+  text_tracker_no_workflow: このチケット種別にワークフローが定義されていません
+  text_no_configuration_data: "ロール、チケット種別、チケットのステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
   default_doc_category_user: ユーザードキュメント
   default_doc_category_tech: 技術ドキュメント
-  enumeration_issue_priorities: 課題の優先度
-  enumeration_doc_categories: ドキュメントカテゴリ
-  label_additional_workflow_transitions_for_assignee: 課題担当者に追加で許可する遷移
-  label_additional_workflow_transitions_for_author: 課題作成者に追加で許可する遷移
-  label_issues_visibility_own: 作成者か担当者である課題
-  field_issues_visibility: 表示できる課題
-  label_issues_visibility_all: すべての課題
-  permission_set_own_issues_private: 自分が追加した課題の下書き設定
-  field_is_private: 下書き
-  permission_set_issues_private: 課題の下書き設定
-  label_issues_visibility_public: 下書き課題以外
-  text_issues_destroy_descendants_confirmation: "%{count}個の子課題も削除されます。"
-  notice_issue_successful_create: 課題 %{id} が作成されました。
-  setting_issue_group_assignment: グループへの課題割り当てを許可
+  enumeration_doc_categories: ドキュメントカテゴリー
+  description_issue_category_reassign: 新しいカテゴリーを選択してください
   error_scm_annotate_big_text_file: テキストファイルサイズの上限を超えているため注釈できません。
-  setting_default_issue_start_date_to_creation_date: 現在の日付を新しい課題の開始日とする
-  label_x_issues:
-    zero: 0 課題
-    one: 1 課題
-    other: "%{count} 課題"
-  setting_commit_cross_project_ref: 異なるプロジェクトの課題の参照/修正を許可
-  notice_issue_update_conflict: この課題を編集中に他のユーザーが更新しました。
-  permission_manage_related_issues: リビジョンと課題の関連の管理
-  label_copy_subtasks: 子課題をコピー
-  label_any_issues_in_project: 次のプロジェクト内の課題
-  label_any_issues_not_in_project: 次のプロジェクト外の課題
-  field_private_notes: 下書きコメント
-  permission_view_private_notes: 下書きコメントの閲覧
-  permission_set_notes_private: コメントの下書き設定
-  label_no_issues_in_project: 次のプロジェクト内の課題を除く
-  setting_cross_project_subtasks: 異なるプロジェクトの課題間の親子関係を許可
-  label_attribute_of_issue: 課題の %{name}
   permission_add_documents: ドキュメントの追加
   permission_edit_documents: ドキュメントの編集
   permission_delete_documents: ドキュメントの削除
-  setting_link_copied_issue: 課題をコピーしたときに関連を設定
-  label_link_copied_issue: コピーした課題に関連を設定
-  label_search_open_issues_only: 未完了の課題のみ
-  permission_copy_issues: 課題のコピー
-  label_parent_task_attributes: 親課題の値の算出方法
-  label_parent_task_attributes_derived: 子課題の値から算出
-  label_parent_task_attributes_independent: 子課題から独立
-  permission_import_issues: 課題のインポート
-  label_import_issues: 課題のインポート
-  label_assigned_issues: 担当している課題
-  label_any_open_issues: 未完了の課題
-  label_no_open_issues: なし または完了した課題
-  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトには課題の追加が許可されている分類がありません
-  label_tracker_all: すべての分類
-  label_new_project_issue_tab_enabled: '"新しい課題" タブを表示'
-  error_no_projects_with_tracker_allowed_for_new_issue: 課題を追加できるプロジェクトがありません
-  error_move_of_child_not_possible: '子課題 %{child} を指定されたプロジェクトに移動できませんでした: %{errors}'
-  error_cannot_reassign_time_entries_to_an_issue_about_to_be_deleted: 削除対象課題への作業時間の再割り当てはできません
-  warning_fields_cleared_on_bulk_edit: この編集操作により次のフィールドの値が課題から削除されます
-  setting_close_duplicate_issues: 重複している課題を連動して終了
-  text_status_no_workflow: このステータスはどの分類のワークフローでも使われていません
-  label_trackers_description: 分類の説明
-  label_open_trackers_description: すべての分類の説明を表示
-  field_parent_issue_subject: 親課題の題名
-  permission_edit_own_issues: 自分が追加した課題の編集
-  text_select_apply_tracker: この分類を適用
-  label_updated_issues: 更新した課題
-  field_history_default_tab: 課題の履歴のデフォルトタブ
-  label_user_mail_notify_about_high_priority_issues_html: 優先度が <em>%{prio}</em> 以上の課題についても通知
-  notice_issue_not_closable_by_open_tasks: 未完了の子課題があるためこの課題は完了にできません。
-  notice_issue_not_closable_by_blocking_issue: 未完了のブロック元課題があるためこの課題は完了にできません。
-  notice_issue_not_reopenable_by_closed_parent_issue: 親課題が完了しているためこの課題は未完了に戻せません。
-  button_add_subtask: 子課題を追加
-  label_subtask: 子課題
-  label_auto_watch_on_issue_contributed_to: 自分が更新した課題
-  label_auto_watch_on_issue_created: 自分が作成した課題
-  button_apply_issues_filter: 課題のフィルタを適用
+  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトにはチケットの追加が許可されているチケット種別がありません
+  label_tracker_all: すべてのチケット種別
+  text_status_no_workflow: このステータスはどのチケット種別のワークフローでも使われていません
+  label_trackers_description: チケット種別の説明
+  label_open_trackers_description: すべてのチケット種別の説明を表示
+  text_select_apply_tracker: このチケット種別を適用
   label_view_previous_annotation: この更新以前の注釈
-  ## Redmine 6以降
-  # setting_copy_attachments_on_issue_copy: 課題をコピーするとき添付ファイルもコピー
 
 ## --------------------
 ## view customizeプラグイン
