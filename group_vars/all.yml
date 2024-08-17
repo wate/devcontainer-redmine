@@ -133,10 +133,10 @@ redmine_trackers:
       - description
       - assigned_to_id
       - start_date
-      - priority
       - due_date
       - category_id
       - parent_issue_id
+      - priority_id
     is_in_roadmap: false
     copy_workflow_from: タスク
   - name: タスク
@@ -167,9 +167,9 @@ redmine_trackers:
     enabled_standard_fields:
       - description
       - assigned_to_id
-      - priority
       - start_date
       - due_date
+      - priority_id
     is_in_roadmap: false
     copy_workflow_from: タスク
   - name: その他
@@ -179,9 +179,9 @@ redmine_trackers:
     enabled_standard_fields:
       - description
       - assigned_to_id
-      - priority
       - start_date
       - due_date
+      - priority_id
     is_in_roadmap: false
     copy_workflow_from: タスク
 
