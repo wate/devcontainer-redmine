@@ -133,6 +133,7 @@ redmine_trackers:
       - description
       - assigned_to_id
       - start_date
+      - priority
       - due_date
       - category_id
       - parent_issue_id
@@ -166,6 +167,7 @@ redmine_trackers:
     enabled_standard_fields:
       - description
       - assigned_to_id
+      - priority
       - start_date
       - due_date
     is_in_roadmap: false
@@ -177,6 +179,7 @@ redmine_trackers:
     enabled_standard_fields:
       - description
       - assigned_to_id
+      - priority
       - start_date
       - due_date
     is_in_roadmap: false
@@ -1461,9 +1464,6 @@ redmine_projects:
       - 運用保守
       - 問い合わせ
       - その他
-    custom_fields:
-      - name: Slack Channel
-        value: "#general"
     wiki_main_page: Wiki
     wiki_pages:
       Wiki:
