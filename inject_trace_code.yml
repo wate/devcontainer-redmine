@@ -1,0 +1,25 @@
+- name: 読み込み順序トレース用コードの差し込み処理
+  hosts: all
+  become: false
+  gather_facts: false
+  tasks:
+    - name: find Ruby file
+      ansible.builtin.find:
+        paths:
+          - "{{ base_dir }}/app"
+          - "{{ base_dir }}/config"
+          - "{{ base_dir }}/lib"
+          - "{{ base_dir }}/plugins"
+        pattern:
+          - "*.rb"
+        recurse: true
+      register: find_result
+    - name: 書き換え対象ファイルを変数に設定
+      ansible.builtin.set_fact:
+        inject_target_files: "{{ find_result.files | map(attribute='path') }}"
+    - name: トレース用の処理を追記
+      ansible.builtin.lineinfile:
+        path: "{{ item }}"
+        insertafter: "^require(_relative)? "
+        line: puts File.expand_path(__FILE__)
+      loop: "{{ inject_target_files }}"

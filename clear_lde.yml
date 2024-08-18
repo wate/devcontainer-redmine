@@ -1,4 +1,4 @@
-- name: Execute post start task
+- name: Clear local development environment
   hosts: all
   become: false
   gather_facts: false
@@ -13,21 +13,31 @@
         path: "{{ base_dir }}/config/database.yml"
       register: database_setting_stat_result
     - name: データベースをリセット
-      environment:
-        DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
-        RAILS_ENV: "{{ redmine_rails_env | default('development') }}"
       when:
         - ansible_facts.system == 'Linux'
         - database_setting_stat_result.stat.exists
       block:
         - name: データベースを削除
+          environment:
+            DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+            RAILS_NEV: "{{ item }}"
           ansible.builtin.command:
             cmd: bundle exec rake db:drop
             chdir: "{{ base_dir }}"
+          loop:
+            - development
+            - test
+            - production
         - name: データベースを作成
+          environment:
+            RAILS_NEV: "{{ item }}"
           ansible.builtin.command:
             cmd: bundle exec rake db:create
             chdir: "{{ base_dir }}"
+          loop:
+            - development
+            - test
+            - production
       tags: db_clear
     - name: themesディレクトリの存在確認
       ansible.builtin.stat:
