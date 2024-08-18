@@ -6,6 +6,11 @@ git_assume_unchanged_files:
   - yarn.lock
 
 ## --------------------
+## 動作モード
+## --------------------
+# redmine_rails_env: development
+
+## --------------------
 ## プラグイン
 ## --------------------
 redmine_plugins: {}
