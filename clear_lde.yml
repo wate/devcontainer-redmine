@@ -13,6 +13,9 @@
         path: "{{ base_dir }}/config/database.yml"
       register: database_setting_stat_result
     - name: データベースをリセット
+      environment:
+        DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+        RAILS_ENV: "{{ redmine_rails_env | default('development') }}"
       when:
         - ansible_facts.system == 'Linux'
         - database_setting_stat_result.stat.exists
@@ -25,6 +28,7 @@
           ansible.builtin.command:
             cmd: bundle exec rake db:create
             chdir: "{{ base_dir }}"
+      tags: db_clear
     - name: themesディレクトリの存在確認
       ansible.builtin.stat:
         path: "{{ base_dir }}/themes"

@@ -8,6 +8,8 @@
   when: document_erd_cfg
   register: erd_config_update_result
 - name: ER図を生成
+  environment:
+    RAILS_ENV: "{{ redmine_rails_env }}"
   ansible.builtin.command:
     cmd: bundle exec rake erd
     chdir: "{{ base_dir }}"
