@@ -3,7 +3,7 @@
   become: false
   gather_facts: false
   tasks:
-    - name: find Ruby file
+    - name: Find Ruby file
       ansible.builtin.find:
         paths:
           - "{{ base_dir }}/app"
