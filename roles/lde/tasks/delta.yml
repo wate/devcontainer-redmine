@@ -1,0 +1,23 @@
+---
+- name: Set Install version variable
+  when: lde_delta_version | default('latest') == 'latest'
+  block:
+    - name: Get latest version
+      ansible.builtin.import_tasks:
+        file: common/get_latest_version.yml
+      vars:
+        github_repo: dandavison/delta
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        lde_delta_version: "{{ latest_version }}"
+- name: Set architecture variable
+  ansible.builtin.set_fact:
+    delta_arch: "{{ delta_arch_types[ansible_facts['architecture']] }}"
+  vars:
+    delta_arch_types:
+      x86_64: amd64
+      aarch64: arm64
+- name: Install delta
+  ansible.builtin.apt:
+    deb: https://github.com/dandavison/delta/releases/download/{{ lde_delta_version }}/git-delta_{{ lde_delta_version }}_{{ delta_arch }}.deb
+  become: true

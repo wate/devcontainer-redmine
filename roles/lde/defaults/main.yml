@@ -2,11 +2,11 @@
 lde_tbls_version: latest
 
 ## -----------------
-## git-deltaをインストールするか否か
+## deltaをインストールするか否か
 ## https://github.com/dandavison/delta
 ## -----------------
-lde_git_delta_install: true
-lde_git_delta_version: latest
+lde_delta_install: true
+lde_delta_version: latest
 
 ## -----------------
 ## d2をインストールするか否か
@@ -46,7 +46,7 @@ lde_git_append_gitignore: |
   /.yardoc/
   /.tbls.yml
   /mkdocs.yml
-  /package.json
+  /Taskfile.yml
   /package-lock.json
   /pnpm-lock.yaml
   /customize

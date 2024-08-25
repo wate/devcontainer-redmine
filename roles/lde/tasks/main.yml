@@ -27,11 +27,11 @@
     file: gem.yml
 - name: Git prompt for bashのインストール
   ansible.builtin.import_tasks:
-    file: git_prompt_for_bash.yml
+    file: git_prompt.yml
 - name: MariaDBのセットアップ
   ansible.builtin.import_tasks:
     file: mariadb.yml
-- name: node.js関連のパッケージのインストール
+- name: yarn/pmpn/niのインストール
   ansible.builtin.import_tasks:
     file: nodejs.yml
 - name: mycliのセットアップ
@@ -49,32 +49,32 @@
 - name: Editorconfigの設定
   ansible.builtin.import_tasks:
     file: editorconfig.yml
+- name: xzのインストール
+  ansible.builtin.import_tasks:
+    file: zx.yml
+- name: taskのインストール
+  ansible.builtin.import_tasks:
+    file: task.yml
 - name: tblsのインストール
   ansible.builtin.import_tasks:
     file: tbls.yml
-  become: true
 - name: runnのインストール
   ansible.builtin.import_tasks:
     file: runn.yml
-  become: true
   when: lde_runn_install
 - name: D2のインストール
   ansible.builtin.import_tasks:
     file: d2.yml
-  become: true
   when: lde_d2_install
-- name: Pandocのインストール
+- name: pandocのインストール
   ansible.builtin.import_tasks:
     file: pandoc.yml
-  become: true
   when: lde_pandoc_install
-- name: Git-deltaのインストール
+- name: deltaのインストール
   ansible.builtin.import_tasks:
-    file: git_delta.yml
-  become: true
-  when: lde_git_delta_install
+    file: delta.yml
+  when: lde_delta_install
 - name: PICTのインストール
   ansible.builtin.import_tasks:
     file: pict.yml
-  become: true
   when: lde_pict_install

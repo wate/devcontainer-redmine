@@ -1,0 +1,6 @@
+- name: zxのインストール/更新
+  community.general.npm:
+    name: zx
+    global: true
+    state: latest
+  become: true
