@@ -39,7 +39,8 @@
         "bierner.markdown-mermaid",
         "bierner.markdown-preview-github-styles",
         "DavidAnson.vscode-markdownlint",
-        "yzhang.markdown-all-in-one"
+        "yzhang.markdown-all-in-one",
+        "task.vscode-task"
       ],
       "settings": {
         "ansible.python.interpreterPath": "/usr/bin/python3",

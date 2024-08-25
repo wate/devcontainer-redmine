@@ -26,12 +26,28 @@
     - role: vscode
       when: ansible_facts.system == "Linux"
       tags: role_vscode
-  tasks: []
-    # - name: Redmine customize directories
-    #   ansible.builtin.file:
-    #     path: "{{ base_dir }}/customize"
-    #     state: directory
-    #     mode: "0755"
-    #   loop:
-    #     - views
-    #     - tasks
+  tasks:
+    - name: VSCodeのタスクを元にtaskのタスクに変換
+      ansible.builtin.set_fact:
+        task_tasks: "{{ task_tasks | default({}) | combine((task_task | items2dict)) }}"
+      vars:
+        task_task:
+          - key: "{{ item.label | lower | regex_replace('( |:)', '_') }}"
+            value:
+              cmds: "{{ item.command.split(' && ') | map('trim') }}"
+      loop: "{{ vscode_tasks }}"
+      loop_control:
+        label: "{{ item.label }}"
+    - name: Debug
+      ansible.builtin.debug:
+        var: task_tasks
+    - name: taskの設定ファイルを生成/更新
+      ansible.builtin.blockinfile:
+        path: "{{ base_dir }}/Taskfile.yml"
+        content: "{{ task_config | to_nice_yaml }}"
+        mode: "0644"
+        create: true
+      vars:
+        task_config:
+          version: 3
+          tasks: "{{ task_tasks }}"

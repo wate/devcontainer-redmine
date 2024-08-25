@@ -100,6 +100,7 @@
         - "{{ base_dir }}/.envrc"
         - "{{ base_dir }}/.erdconfig"
         - "{{ base_dir }}/.tbls.yml"
+        - "{{ base_dir }}/Taskfile.yml"
         - "{{ base_dir }}/mkdocs.yml"
         - "{{ base_dir }}/Gemfile.local"
         - "{{ base_dir }}/Gemfile.lock"
