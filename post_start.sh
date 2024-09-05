@@ -11,3 +11,7 @@ if [ -e "${PWD}/.devcontainer/post_start.yml" ]; then
     ansible-playbook post_start.yml
   fi
 fi
+
+if [ -z "${__GIT_PROMPT_SHOW_CHANGED_FILES_COUNT}" ]; then
+  source "${HOME}/.bashrc"
+fi
