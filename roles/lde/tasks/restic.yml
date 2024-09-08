@@ -1,0 +1,6 @@
+---
+- name: Execute restic self update
+  ansible.builtin.command:
+    cmd: restic self-update
+  changed_when: false
+  become: true

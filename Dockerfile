@@ -8,7 +8,7 @@ RUN . /etc/os-release \
   && apt-get -y install --no-install-recommends ruby-dev ruby-rubygems bundler imagemagick ghostscript \
   && apt-get -y install --no-install-recommends fonts-ipaexfont fonts-morisawa-bizud-gothic fonts-morisawa-bizud-mincho fnt \
   && apt-get -y install --no-install-recommends pipx \
-  && apt-get -y install --no-install-recommends direnv tig silversearcher-ag plantuml graphviz \
+  && apt-get -y install --no-install-recommends direnv tig silversearcher-ag plantuml graphviz restic \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/*
 

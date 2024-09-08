@@ -1,7 +1,8 @@
 - name: Execute post create task
-  hosts: all
+  hosts: localhost
   become: false
   gather_facts: false
+  connection: local
   pre_tasks:
     - name: マシン情報を取得
       ansible.builtin.setup:

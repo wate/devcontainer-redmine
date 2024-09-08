@@ -22,12 +22,18 @@
 - name: Gitの無視ファイルの設定を調整
   ansible.builtin.import_tasks:
     file: git.yml
-- name: Gemの設定を調整
-  ansible.builtin.import_tasks:
-    file: gem.yml
 - name: Git prompt for bashのインストール
   ansible.builtin.import_tasks:
     file: git_prompt.yml
+- name: lazygitのインストール
+  ansible.builtin.import_tasks:
+    file: lazygit.yml
+- name: resticのインストール
+  ansible.builtin.import_tasks:
+    file: restic.yml
+- name: Gemの設定を調整
+  ansible.builtin.import_tasks:
+    file: gem.yml
 - name: MariaDBのセットアップ
   ansible.builtin.import_tasks:
     file: mariadb.yml

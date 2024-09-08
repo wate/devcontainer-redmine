@@ -1,7 +1,8 @@
 - name: Execute post start task
-  hosts: all
+  hosts: localhost
   become: false
   gather_facts: false
+  connection: local
   tasks:
     - name: 環境変数の有効化
       ansible.builtin.command:

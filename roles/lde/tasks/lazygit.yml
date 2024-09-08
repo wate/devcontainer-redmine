@@ -1,0 +1,27 @@
+---
+- name: Set Install version variable
+  when: lde_lazygit_version | default('latest') == 'latest'
+  block:
+    - name: Get latest version
+      ansible.builtin.import_tasks:
+        file: common/get_latest_version.yml
+      vars:
+        github_repo: jesseduffield/lazygit
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        lde_lazygit_version: "{{ latest_version }}"
+- name: Set architecture variable
+  ansible.builtin.set_fact:
+    asset_file: lazygit_{{ lde_lazygit_version[1:] }}_{{ ansible_facts['system'] }}_{{ task_arch_types[ansible_facts['architecture']] }}.tar.gz
+  vars:
+    task_arch_types:
+      x86_64: x86_64
+      aarch64: arm64
+- name: Install lazygit
+  ansible.builtin.unarchive:
+    src: https://github.com/jesseduffield/lazygit/releases/download/{{ lde_lazygit_version }}/{{ asset_file }}
+    dest: /usr/local/bin
+    include:
+      - lazygit
+    remote_src: true
+  become: true

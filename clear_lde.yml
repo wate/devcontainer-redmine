@@ -1,7 +1,9 @@
+---
 - name: Clear local development environment
-  hosts: all
+  hosts: localhost
   become: false
   gather_facts: false
+  connection: local
   tasks:
     - name: 実行中のマシン情報を取得
       ansible.builtin.setup:
