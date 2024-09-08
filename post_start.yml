@@ -1,5 +1,5 @@
 - name: Execute post start task
-  hosts: localhost
+  hosts: all
   become: false
   gather_facts: false
   connection: local

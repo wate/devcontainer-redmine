@@ -1,5 +1,5 @@
 - name: Execute post create task
-  hosts: localhost
+  hosts: all
   become: false
   gather_facts: false
   connection: local
@@ -39,9 +39,6 @@
       loop: "{{ vscode_tasks }}"
       loop_control:
         label: "{{ item.label }}"
-    - name: Debug
-      ansible.builtin.debug:
-        var: task_tasks
     - name: taskの設定ファイルを生成/更新
       ansible.builtin.blockinfile:
         path: "{{ base_dir }}/Taskfile.yml"

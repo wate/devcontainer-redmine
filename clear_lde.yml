@@ -1,6 +1,6 @@
 ---
 - name: Clear local development environment
-  hosts: localhost
+  hosts: all
   become: false
   gather_facts: false
   connection: local
