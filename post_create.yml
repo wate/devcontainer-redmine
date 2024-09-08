@@ -35,7 +35,8 @@
         task_task:
           - key: "{{ item.label | lower | regex_replace('( |:)', '_') }}"
             value:
-              cmds: "{{ item.command.split(' && ') | map('trim') }}"
+              cmds: 
+                - "{{ item.command }}"
       loop: "{{ vscode_tasks }}"
       loop_control:
         label: "{{ item.label }}"
