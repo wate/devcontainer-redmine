@@ -7,6 +7,7 @@
 - name: Webフォントの生成に必要なパッケージをインストール
   ansible.builtin.apt:
     name:
+      - fontforge
       - fonttools
       - sfnt2woff-zopfli
       - woff2
@@ -51,20 +52,27 @@
           - "*.ttf"
           - "*.otf"
       register: find_subset_result
-    - name: woffファイルを生成
+    - name: Webフォント化(woff)
       ansible.builtin.command:
         cmd: sfnt2woff-zopfli {{ item.path }}
         chdir: "{{ document_asset_font_dir }}"
       loop: "{{ find_subset_result.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
-    - name: woff2ファイルを生成
+    - name: Webフォント化(woff2)
       ansible.builtin.command:
         cmd: woff2_compress {{ item.path }}
         chdir: "{{ document_asset_font_dir }}"
       loop: "{{ find_subset_result.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
+    # - name: Webフォント化(svg)
+    #   ansible.builtin.command:
+    #     cmd: fontforge -lang=ff -c "Open('{{ item.path | basename }}'); Generate('{{ (item.path | basename)[:-4] }}.svg')"
+    #     chdir: "{{ document_asset_font_dir }}"
+    #   loop: "{{ find_subset_result.files }}"
+    #   loop_control:
+    #     label: "{{ item.path | basename }}"
     - name: CSSファイルを生成
       ansible.builtin.template:
         src: fonts.css.j2
