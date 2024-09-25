@@ -36,8 +36,8 @@ redmine_gemfile_local: |
 ## Redmineの追加環境設定
 redmine_additional_environment: |
   config.logger = Logger.new('/dev/null')
-  config.paths['app/views'] = ['customize/views', 'app/views']
-  config.paths['lib/tasks'] = ['customize/tasks', 'lib/tasks']
+  config.paths['app/views'] = ['vendor/views', 'app/views']
+  config.paths['lib/tasks'] = ['vendor/tasks', 'lib/tasks']
 
 ## Redmineの設定
 redmine_cfg:
