@@ -32,6 +32,9 @@ redmine_gemfile_local: |
   gem 'rails-erd'
   gem 'ruby-lsp'
   gem 'ruby-lsp-rails'
+  gem 'steep'
+  gem 'rbs_rails'
+  gem 'rbs-inline'
 
 ## Redmineの追加環境設定
 redmine_additional_environment: |

@@ -46,6 +46,8 @@ lde_pict_install: false
 lde_git_append_gitignore: |
   /.devcontainer/
   /.ruby-lsp/
+  /.gem_rbs_collection
+  /sig/**/*.rbs
   /.editorconfig
   /.env
   /.envrc
