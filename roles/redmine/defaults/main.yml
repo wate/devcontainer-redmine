@@ -29,9 +29,14 @@ redmine_bundler_cfg:
 
 ## 追加でインストールするgemパッケージ
 redmine_gemfile_local: |
+  ## @see https://voormedia.github.io/rails-erd/
   gem 'rails-erd'
+  ## @see https://shopify.github.io/ruby-lsp/
   gem 'ruby-lsp'
   gem 'ruby-lsp-rails'
+  ## @see https://github.com/skatkov/yard-markdown
+  # gem 'yard-markdown'
+  ## @see https://speakerdeck.com/sinsoku/typed-rails-application-development
   # gem 'steep'
   # gem 'rbs_rails'
   # gem 'rbs-inline'
