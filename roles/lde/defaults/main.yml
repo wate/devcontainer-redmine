@@ -61,8 +61,7 @@ lde_git_append_gitignore: |
   /pnpm-lock.yaml
   /lib/tasks/import.rake
   /lib/tasks/export.rake
-  /vendor/tasks
-  /vendor/views
+  /vendor
   /doc/app/
   /doc/assets/
   /doc/schema/
