@@ -1,3 +1,6 @@
+---
+# code: language=ansible
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json
 - name: Execute post create task
   hosts: all
   become: false
@@ -35,7 +38,7 @@
         task_task:
           - key: "{{ item.label | lower | regex_replace('( |:)', '_') }}"
             value:
-              cmds: 
+              cmds:
                 - "{{ item.command }}"
       loop: "{{ vscode_tasks }}"
       loop_control:

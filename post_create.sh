@@ -5,7 +5,7 @@ if [ ! -e "${HOME}/.local/bin/ansible" ]; then
 fi
 
 if [ ! -e "${HOME}/.local/bin/ansible-lint" ]; then
-  pipx install ansible-lint
+  pipx inject ansible ansible-lint --include-apps
 fi
 
 if [ -e "${PWD}/.devcontainer/post_create.yml" ]; then

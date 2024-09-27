@@ -3,7 +3,7 @@
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
-      bundle exec rake -T | grep -v "rake erd"  | grep -v "rake redmine:import"
+      bundle exec rake -T | grep -v "rake erd" | grep -v "rake redmine:import"
     chdir: "{{ base_dir }}"
     executable: /usr/bin/bash
   changed_when: false
