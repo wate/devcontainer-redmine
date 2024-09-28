@@ -109,3 +109,4 @@ plugins:
   ## https://oprypin.github.io/mkdocs-literate-nav/
   - literate-nav:
       # nav_file: SUMMARY.md
+  - d2

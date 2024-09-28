@@ -1,4 +1,8 @@
 ---
+- name: Install WeasyPrint package
+  ansible.builtin.apt:
+    name: weasyprint
+  become: true
 - name: MkDocsのインストール
   community.general.pipx:
     name: mkdocs
@@ -14,3 +18,5 @@
       - mkdocs-glightbox
       - mkdocs-section-index
       - mkdocs-literate-nav
+      - mkdocs-d2-plugin
+      - mkdocs-with-pdf
