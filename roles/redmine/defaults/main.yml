@@ -46,6 +46,7 @@ redmine_additional_environment: |
   config.logger = Logger.new('/dev/null')
   config.paths['app/views'] = ['vendor/views', 'app/views']
   config.paths['lib/tasks'] = ['vendor/tasks', 'lib/tasks']
+  config.paths['config/locales'] = ['config/locales', 'vendor/config/locales']
 
 ## Redmineの設定
 redmine_cfg:
