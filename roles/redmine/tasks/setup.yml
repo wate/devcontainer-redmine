@@ -44,7 +44,7 @@
     create: true
 - name: gemパッケージのインストール
   ansible.builtin.command:
-    cmd: bundle install
+    cmd: bundle update
     chdir: "{{ redmine_root }}"
 - name: トークンファイル生成コマンドを実行
   ansible.builtin.command:
