@@ -46,7 +46,7 @@ redmine_additional_environment: |
   config.logger = Logger.new('/dev/null')
   config.paths['app/views'] = ['vendor/views', 'app/views']
   config.paths['lib/tasks'] = ['vendor/tasks', 'lib/tasks']
-  config.paths['config/locales'] = ['config/locales', 'vendor/config/locales']
+  config.i18n.load_path += Dir[Rails.root.join('vendor/config/locales/*.yml').to_s]
 
 ## Redmineの設定
 redmine_cfg:
