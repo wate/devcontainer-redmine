@@ -1,4 +1,9 @@
 ---
+- name: 現在のワークスペースを安全なディレクトリとして設定する
+  community.general.git_config:
+    name: safe.directory
+    value: "{{ playbook_dir | dirname }}"
+    scope: global
 - name: Git管理下から除外するファイルの設定を追加
   ansible.builtin.blockinfile:
     path: "{{ base_dir }}/.gitignore"

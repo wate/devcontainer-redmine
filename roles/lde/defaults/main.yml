@@ -46,14 +46,15 @@ lde_pict_install: false
 lde_git_append_gitignore: |
   /.devcontainer/
   /.ruby-lsp/
+  /.cache/
+  /.vscode/
+  /.yardoc/
   /.gem_rbs_collection
   /sig/**/*.rbs
   /.editorconfig
   /.env
   /.envrc
   /.erdconfig
-  /.vscode/
-  /.yardoc/
   /.tbls.yml
   /mkdocs.yml
   /Taskfile.yml
