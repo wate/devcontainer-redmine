@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  redmine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DEBIAN_VERSION: ${DEBIAN_VERSION:-trixie}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DB_ADAPTER: mysql2
+      DB_NAME: redmine
+      DB_HOST: db
+      DB_USER: redmine
+      DB_PASSWORD: redmine
+      RAILS_ENV: development
+    volumes:
+      # Redmineのソースコード全体をマウント
+      - ..:/workspace:cached
+      # bundle cacheを永続化（gem再インストールを避ける）
+      - bundle-cache:/workspace/vendor/bundle
+    stdin_open: true
+    tty: true
+  db:
+    image: mariadb:11
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: redmine
+      MYSQL_USER: redmine
+      MYSQL_PASSWORD: redmine
+      TZ: Asia/Tokyo
+    volumes:
+      - db-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  db-data:
+  bundle-cache:
