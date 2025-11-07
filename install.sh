@@ -7,7 +7,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-REPO_URL="https://raw.githubusercontent.com/YOUR_USERNAME/redmine-devcontainer/main"
+REPO_URL="https://raw.githubusercontent.com/wate/redmine-devcontainer/main"
 
 echo -e "${GREEN}=== Redmine Dev Container Installer ===${NC}"
 echo ""
