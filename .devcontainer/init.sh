@@ -27,6 +27,14 @@ development:
 EOF
 fi
 
+if [ ! -f Gemfile.local ]; then
+    echo "Generating Gemfile.local..."
+    cat > Gemfile.local <<EOF
+gem "puma"
+gem "ruby-lsp"
+EOF
+fi
+
 # Gemのインストール
 echo "Installing gems..."
 bundle config set --local without 'test'

@@ -1,21 +1,15 @@
 {
-  "name": "Redmine Development",
-  "dockerComposeFile": "docker-compose.yml",
+  "name": "Redmine Dev Container",
+  "dockerComposeFile": "compose.yml",
   "service": "redmine",
   "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
       "extensions": [
-        "rebornix.ruby",
-        "castwide.solargraph",
-        "kaiwood.endwise",
-        "misogi.ruby-rubocop",
-        "MS-CEINTL.vscode-language-pack-ja"
+        "Shopify.ruby-lsp"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
-        "ruby.intellisense": "rubyLocate",
-        "ruby.codeCompletion": "rcodetools",
         "files.exclude": {
           "**/vendor/bundle": true,
           "**/tmp": true,
@@ -27,6 +21,6 @@
   "forwardPorts": [
     3000
   ],
-  "postCreateCommand": "echo 'Run init.sh to start Redmine'",
-  "remoteUser": "redmine"
+  "shutdownAction": "stopCompose",
+  "remoteUser": "vscode"
 }

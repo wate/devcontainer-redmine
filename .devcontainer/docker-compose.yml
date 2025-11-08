@@ -18,6 +18,7 @@ services:
       DB_HOST: db
       DB_USER: redmine
       DB_PASSWORD: redmine
+      REDMINE_LANG: ja
       RAILS_ENV: development
     volumes:
       # Redmineのソースコード全体をマウント
@@ -42,6 +43,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
 volumes:
   db-data:
   bundle-cache:
