@@ -56,7 +56,7 @@ for file in "${FILES[@]}"; do
     fi
 done
 
-# init.shに実行権限を付与
+# シェルスクリプトに実行権限を付与
 chmod +x .devcontainer/*.sh
 
 echo ""
