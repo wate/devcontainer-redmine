@@ -40,7 +40,8 @@ FILES=(
     "devcontainer.json"
     "docker-compose.yml"
     "Dockerfile"
-    "init.sh"
+    "post_create.sh"
+    "post_start.sh"
 )
 
 echo "Downloading Dev Container configuration files..."
@@ -56,14 +57,14 @@ for file in "${FILES[@]}"; do
 done
 
 # init.shに実行権限を付与
-chmod +x .devcontainer/init.sh
+chmod +x .devcontainer/*.sh
 
 echo ""
 echo -e "${GREEN}=== Installation completed successfully! ===${NC}"
 echo ""
 echo "Next steps:"
 echo "  1. Place your plugins in: plugins/"
-echo "  2. Place your themes in: public/themes/"
+echo "  2. Place your themes in: themes/"
 echo "  3. Open this directory in VS Code: code ."
 echo "  4. Command Palette (⌘+Shift+P) → 'Dev Containers: Reopen in Container'"
 echo ""

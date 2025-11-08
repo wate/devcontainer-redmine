@@ -54,8 +54,3 @@ if [ -n "$(ls -A plugins 2>/dev/null)" ]; then
     echo "Running plugin migrations..."
     bundle exec rake redmine:plugins:migrate RAILS_ENV=development || true
 fi
-
-# Redmine起動
-echo "Starting Redmine on http://localhost:3000"
-echo "Default credentials: admin / admin"
-exec bundle exec rails server -b 0.0.0.0 -e development
