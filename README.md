@@ -89,20 +89,19 @@ chmod +x .devcontainer/init.sh
 ### プラグインの追加
 
 ```bash
-# ホスト側（Mac）でプラグインを追加
+# ホスト側(Mac)でプラグインを追加
 cp -r /path/to/new_plugin plugins/
 
-# VS Codeのターミナルで（コンテナ内）
-bundle install
-bundle exec rake redmine:plugins:migrate RAILS_ENV=development
-
-# Railsサーバーを再起動（Ctrl+C → init.sh再実行）
+# VS Codeで
+# コマンドパレット → "Dev Containers: Rebuild Container"
 ```
+
+プラグインは自動的にインストール・マイグレーションされ、Railsサーバーが起動します。
 
 ### Redmineバージョンの切り替え
 
 ```bash
-# ホスト側（Mac）で
+# ホスト側(Mac)で
 git checkout 5.1-stable
 
 # VS Codeで
@@ -111,7 +110,7 @@ git checkout 5.1-stable
 
 ### Debianバージョンの変更
 
-`.devcontainer/docker-compose.yml`を編集
+`.devcontainer/compose.yml`を編集
 
 ```yaml
 services:
@@ -120,14 +119,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        DEBIAN_VERSION: bookworm  # trixie, bookworm, bullseye等
+        VARIANT: bookworm  # trixie, bookworm, bullseye等
 ```
 
 または環境変数で指定
 
 ```bash
-# ホスト側（Mac）で
-export DEBIAN_VERSION=bookworm
+# ホスト側(Mac)で
+export VARIANT=bookworm
 # VS Code: "Dev Containers: Rebuild Container"
 ```
 
@@ -135,12 +134,16 @@ export DEBIAN_VERSION=bookworm
 
 ```bash
 # コンテナ内で
-RESET_DB=true /usr/local/bin/init.sh
+bundle exec rake db:drop db:create db:migrate RAILS_ENV=development
+bundle exec rake redmine:load_default_data REDMINE_LANG=ja RAILS_ENV=development
+
+# Railsサーバーを再起動
+# コマンドパレット → "Developer: Reload Window"
 ```
 
 ### PostgreSQLを使う場合
 
-`.devcontainer/docker-compose.yml`を編集
+`.devcontainer/compose.yml`を編集
 
 ```yaml
 services:
@@ -165,7 +168,7 @@ services:
 
 ```bash
 # コンテナを完全に削除して再構築
-docker compose -f .devcontainer/docker-compose.yml down -v
+docker compose -f .devcontainer/compose.yml down -v
 # VS Code: "Dev Containers: Rebuild Container"
 ```
 
@@ -174,17 +177,20 @@ docker compose -f .devcontainer/docker-compose.yml down -v
 ```bash
 # コンテナ内で
 rm -rf vendor/bundle
-bundle install
+# VS Code: "Dev Containers: Rebuild Container"
 ```
 
 ### プラグインがロードされない
 
 ```bash
+# コンテナ内で
 # プラグインディレクトリの確認
 ls -la plugins/
 
 # プラグインのマイグレーション
 bundle exec rake redmine:plugins:migrate RAILS_ENV=development
+
+# VS Code: "Developer: Reload Window"
 ```
 
 本番環境との差異
