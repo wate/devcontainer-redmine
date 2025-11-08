@@ -17,8 +17,8 @@ services:
       DB_HOST: db
       DB_USER: redmine
       DB_PASSWORD: redmine
-      REDMINE_LANG: ja
-      RAILS_ENV: development
+      # REDMINE_LANG: ja
+      # RAILS_ENV: development
     volumes:
       - ..:/workspace:cached
       - bundle-cache:/workspace/vendor/bundle

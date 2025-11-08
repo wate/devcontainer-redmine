@@ -12,8 +12,6 @@
         "terminal.integrated.defaultProfile.linux": "bash",
         "files.exclude": {
           "**/vendor/bundle": true,
-          "**/tmp": true,
-          "**/log": true
         }
       }
     }
@@ -21,6 +19,8 @@
   "forwardPorts": [
     3000
   ],
+  "postCreateCommand": ".devcontainer/post_create.sh",
+  "postStartCommand": ".devcontainer/post_start.sh",
   "shutdownAction": "stopCompose",
   "remoteUser": "vscode"
 }
