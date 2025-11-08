@@ -17,11 +17,10 @@ services:
       DB_HOST: db
       DB_USER: redmine
       DB_PASSWORD: redmine
-      # REDMINE_LANG: ja
-      # RAILS_ENV: development
+      # REDMINE_ADMIN_PASSWORD: your_secure_password
+      # REDMINE_RESET_ON_START: "true"  # Set to "true" to reset environment on next start
     volumes:
       - ..:/workspace:cached
-      - bundle-cache:/workspace/vendor/bundle
   db:
     image: mariadb:11
     environment:
@@ -36,4 +35,3 @@ services:
 
 volumes:
   db-data:
-  bundle-cache:

@@ -11,8 +11,14 @@
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
         "files.exclude": {
-          "**/vendor/bundle": true,
-        }
+          "**/vendor/bundle": true
+        },
+        "rubyLsp.erpEnabled": true,
+        "rubyLsp.rubyVersionManager": {
+          "identifier": "none"
+        },
+        "rubyLsp.bundleGemfile": "/workspace/Gemfile",
+        "rubyLsp.customRubyCommand": "bundle exec ruby"
       }
     }
   },

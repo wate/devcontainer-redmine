@@ -42,6 +42,7 @@ FILES=(
     "Dockerfile"
     "post_create.sh"
     "post_start.sh"
+    "reset.sh"
 )
 
 echo "Downloading Dev Container configuration files..."

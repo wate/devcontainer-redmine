@@ -83,6 +83,22 @@ chmod +x .devcontainer/init.sh
 - **Database**: MariaDB 11
 - **Bundler**: システムbundler
 
+### 主要ファイル
+
+- **devcontainer.json**: VS Code Dev Container設定
+- **compose.yml**: Docker Compose設定（DB、環境変数）
+- **Dockerfile**: Debian + Ruby環境の構築
+- **post_create.sh**: 初回作成時の自動セットアップ
+    - `database.yml`、`configuration.yml`の生成
+    - Gemのインストール
+    - データベース初期化
+    - 管理者アカウント設定
+- **post_start.sh**: コンテナ起動時の処理
+    - 管理者パスワードの設定
+    - 環境変数によるリセット処理
+    - Railsサーバーの起動
+- **reset.sh**: 環境リセットスクリプト
+
 使い方
 -------------------------
 
@@ -132,6 +148,43 @@ export VARIANT=bookworm
 
 ### データベースのリセット
 
+#### 方法1: reset.shスクリプトを使用（推奨）
+
+```bash
+# コンテナ内で（データベースは保持）
+.devcontainer/reset.sh
+
+# データベースも含めて完全リセット
+.devcontainer/reset.sh --with-db
+
+# その後、コンテナを再ビルド
+# コマンドパレット → "Dev Containers: Rebuild Container"
+```
+
+`reset.sh`は以下の処理を実行します：
+
+- `config/database.yml`、`config/configuration.yml`の削除
+- `vendor/bundle`のクリア
+- `tmp/cache`のクリア
+- ログファイルのクリア
+- `--with-db`オプション: データベースの削除
+
+#### 方法2: 環境変数で自動リセット
+
+`.devcontainer/compose.yml`で以下を設定：
+
+```yaml
+services:
+  redmine:
+    environment:
+      REDMINE_RESET_ON_START: "true"  # 次回起動時にリセット
+```
+
+コンテナ起動時に自動的に環境がリセットされ、データベースが初期化されます。  
+**注意**: リセット後は`REDMINE_RESET_ON_START`を`false`に戻すか削除してください。
+
+#### 方法3: 手動コマンド
+
 ```bash
 # コンテナ内で
 bundle exec rake db:drop db:create db:migrate RAILS_ENV=development
@@ -160,6 +213,19 @@ services:
       DB_ADAPTER: postgresql
       # ...
 ```
+
+### 管理者パスワードのカスタマイズ
+
+デフォルトの管理者パスワードは`admin`ですが、`.devcontainer/compose.yml`でカスタマイズできます：
+
+```yaml
+services:
+  redmine:
+    environment:
+      REDMINE_ADMIN_PASSWORD: your_secure_password
+```
+
+コンテナ起動のたびに`post_start.sh`が管理者パスワードを設定します。
 
 トラブルシューティング
 -------------------------
