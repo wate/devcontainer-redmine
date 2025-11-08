@@ -6,10 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        DEBIAN_VERSION: ${DEBIAN_VERSION:-trixie}
+        VARIANT: ${VARIANT:-trixie}
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     ports:
       - "3000:3000"
     environment:
@@ -21,12 +20,8 @@ services:
       REDMINE_LANG: ja
       RAILS_ENV: development
     volumes:
-      # Redmineのソースコード全体をマウント
       - ..:/workspace:cached
-      # bundle cacheを永続化（gem再インストールを避ける）
       - bundle-cache:/workspace/vendor/bundle
-    stdin_open: true
-    tty: true
   db:
     image: mariadb:11
     environment:
@@ -38,11 +33,6 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
 volumes:
   db-data:

@@ -38,7 +38,7 @@ mkdir -p .devcontainer
 # ファイルをダウンロード
 FILES=(
     "devcontainer.json"
-    "docker-compose.yml"
+    "compose.yml"
     "Dockerfile"
     "post_create.sh"
     "post_start.sh"
