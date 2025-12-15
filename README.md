@@ -55,6 +55,18 @@ cd /path/to/redmine
 curl -sSL https://raw.githubusercontent.com/wate/redmine-devcontainer/main/install.sh | bash
 ```
 
+既存の`.devcontainer`ディレクトリがある場合、強制的に上書きする場合は以下のいずれか：
+
+```bash
+# --forceフラグを使用
+curl -sSL https://raw.githubusercontent.com/wate/redmine-devcontainer/main/install.sh | bash -s -- --force
+
+# 環境変数を使用
+curl -sSL https://raw.githubusercontent.com/wate/redmine-devcontainer/main/install.sh | FORCE=1 bash
+```
+
+**注意**: ディレクトリ全体ではなく、個別ファイルのみが上書きされます。カスタム設定ファイルは保持されます。
+
 ### 方法2: 手動インストール
 
 ```bash

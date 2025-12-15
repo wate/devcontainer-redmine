@@ -9,6 +9,20 @@ NC='\033[0m' # No Color
 
 REPO_URL="https://raw.githubusercontent.com/wate/redmine-devcontainer/main"
 
+# 引数をパース
+FORCE_OVERWRITE=false
+if [ "${FORCE}" = "1" ] || [ "${FORCE}" = "true" ]; then
+    FORCE_OVERWRITE=true
+fi
+for arg in "$@"; do
+    case $arg in
+        -f|--force)
+            FORCE_OVERWRITE=true
+            shift
+            ;;
+    esac
+done
+
 echo -e "${GREEN}=== Redmine Dev Container Installer ===${NC}"
 echo ""
 
@@ -21,19 +35,22 @@ fi
 
 # .devcontainerディレクトリが既に存在するか確認
 if [ -d ".devcontainer" ]; then
-    echo -e "${YELLOW}Warning: .devcontainer directory already exists.${NC}"
-    read -p "Do you want to overwrite it? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Installation cancelled."
-        exit 0
+    if [ "$FORCE_OVERWRITE" = true ]; then
+        echo -e "${YELLOW}Warning: .devcontainer directory already exists. Files will be overwritten...${NC}"
+    else
+        echo -e "${YELLOW}Warning: .devcontainer directory already exists.${NC}"
+        read -p "Do you want to overwrite the files? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "Installation cancelled."
+            exit 0
+        fi
     fi
-    rm -rf .devcontainer
+else
+    # .devcontainerディレクトリを作成
+    echo "Creating .devcontainer directory..."
+    mkdir -p .devcontainer
 fi
-
-# .devcontainerディレクトリを作成
-echo "Creating .devcontainer directory..."
-mkdir -p .devcontainer
 
 # ファイルをダウンロード
 FILES=(
@@ -66,7 +83,11 @@ echo ""
 echo "Next steps:"
 echo "  1. Place your plugins in: plugins/"
 echo "  2. Place your themes in: themes/"
-echo "  3. Open this directory in VS Code: code ."
+echo " 
+echo "Tip: For forced reinstallation, use:"
+echo "  curl -sSL https://example.com/install.sh | bash -s -- --force"
+echo "  or: curl -sSL https://example.com/install.sh | FORCE=1 bash"
+echo "" 3. Open this directory in VS Code: code ."
 echo "  4. Command Palette (⌘+Shift+P) → 'Dev Containers: Reopen in Container'"
 echo ""
 echo "Redmine will be available at: http://localhost:3000"
