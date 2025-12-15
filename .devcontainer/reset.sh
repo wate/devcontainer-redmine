@@ -6,9 +6,9 @@ echo "=== Resetting Redmine Development Environment ==="
 cd /workspace
 
 # オプション処理
-RESET_DB=false
-if [ "$1" = "--with-db" ]; then
-    RESET_DB=true
+RESET_DB=true
+if [ "$1" = "--preserve-db" ] || [ "$1" = "--without-db" ]; then
+    RESET_DB=false
 fi
 
 # 生成されたファイルを削除
@@ -40,20 +40,22 @@ fi
 # データベースもリセットする場合
 if [ "$RESET_DB" = true ]; then
     echo ""
-    echo "Resetting database..."
-    bundle exec rake db:drop:all RAILS_ENV=development 2>/dev/null || true
-    rm -f config/database.yml
+    echo "Resetting database schema (keeping database)..."
+    bundle exec rake db:migrate VERSION=0 RAILS_ENV=development 2>/dev/null || true
     echo ""
     echo "Database reset complete."
     echo "Run 'Dev Containers: Rebuild Container' to reinitialize everything."
 else
     echo ""
-    echo "=== Reset complete ==="
+    echo "=== Reset complete (database preserved) ==="
     echo ""
-    echo "Files cleaned. Database is preserved."
+    echo "Files cleaned. Database is preserved by option."
     echo ""
-    echo "To also reset the database, run:"
-    echo "  .devcontainer/reset.sh --with-db"
+    echo "To reset including the database (default behavior), run without options or:"
+    echo "  .devcontainer/reset.sh"
+    echo ""
+    echo "To preserve the database, run:"
+    echo "  .devcontainer/reset.sh --preserve-db"
     echo ""
     echo "Or rebuild the Dev Container to start fresh."
 fi
