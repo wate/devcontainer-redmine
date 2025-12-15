@@ -16,6 +16,7 @@ echo "Removing generated files..."
 rm -f config/configuration.yml
 rm -f config/initializers/secret_token.rb
 rm -f Gemfile.local
+rm -f Gemfile.lock
 rm -f .bundle/config
 
 # vendor/bundleを削除
