@@ -37,7 +37,25 @@ fi
 # configuration.ymlが存在しない場合は生成
 if [ ! -f config/configuration.yml ]; then
     echo "Generating config/configuration.yml..."
-    cp config/configuration.yml.example config/configuration.yml
+    cat > config/configuration.yml <<EOF
+# Redmine configuration file
+
+production:
+  email_delivery:
+    delivery_method: :smtp
+    smtp_settings:
+      address: mailpit
+      port: 1025
+      domain: localhost
+
+development:
+  email_delivery:
+    delivery_method: :smtp
+    smtp_settings:
+      address: mailpit
+      port: 1025
+      domain: localhost
+EOF
 fi
 
 # Gemのインストール
