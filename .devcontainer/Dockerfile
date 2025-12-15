@@ -11,7 +11,7 @@ RUN . /etc/os-release \
   && rm -f /etc/apt/sources.list.d/yarn.list \
   && apt-get update && export DEBIAN_FRONTEND=noninteractive \
   && apt-get install -y --no-install-recommends bash-completion build-essential gpg vim \
-  && apt-get install -y --no-install-recommends ruby ruby-dev bundler \
+  && apt-get install -y --no-install-recommends ruby ruby-dev bundler puma \
   && apt-get install -y --no-install-recommends libpq-dev default-libmysqlclient-dev mariadb-client acl \
   && apt-get install -y --no-install-recommends imagemagick libmagickwand-dev libyaml-dev \
   && apt-get install -y --no-install-recommends fonts-ipaexfont fonts-morisawa-bizud-gothic fonts-morisawa-bizud-mincho fnt \
