@@ -16,8 +16,8 @@ services:
       DB_USER: redmine
       DB_PASSWORD: redmine
       # REDMINE_ADMIN_PASSWORD: your_secure_password
-      # REDMINE_RESET_ON_START: "true"  # Set to "true" to reset environment on next start
       REDMINE_REST_API_ENABLED: "true"  # Set to "true" to enable REST API
+      REDMINE_DEFAULT_PROJECTS_PUBLIC: "0"  # Set to "1" for public, "0" for private
     volumes:
       - ..:/workspace:cached
   db:

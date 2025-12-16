@@ -3,37 +3,6 @@ set -e
 
 echo "=== Start Redmine Development Environment ==="
 
-# 環境変数によるリセット処理
-if [ "$REDMINE_RESET_ON_START" = "true" ]; then
-    echo "REDMINE_RESET_ON_START is enabled. Resetting environment..."
-    
-    # データベースをリセット
-    echo "Dropping database..."
-    bundle exec rake db:drop:all RAILS_ENV=development 2>/dev/null || true
-    
-    # 生成されたファイルを削除
-    echo "Removing generated files..."
-    rm -f config/database.yml
-    rm -f config/configuration.yml
-    rm -f config/initializers/secret_token.rb
-    rm -f Gemfile.local
-    rm -f Gemfile.lock
-    
-    # キャッシュとログをクリア
-    rm -rf tmp/cache/* 2>/dev/null || true
-    rm -f log/*.log 2>/dev/null || true
-    
-    echo "Reset complete. Now running post_create.sh..."
-    # post_create.shを実行して再初期化
-    /workspace/.devcontainer/post_create.sh
-    
-    echo ""
-    echo "!!! IMPORTANT !!!"
-    echo "Environment has been reset. Please set REDMINE_RESET_ON_START=false"
-    echo "in compose.yml to prevent reset on next restart."
-    echo ""
-fi
-
 # 起動時にマイグレーションを実行
 echo "Running database migrations..."
 bundle exec rake db:migrate RAILS_ENV=development
@@ -70,14 +39,16 @@ if [ "$REDMINE_REST_API_ENABLED" = "true" ]; then
     " RAILS_ENV=development 2>/dev/null || true
 fi
 
-# 新規プロジェクトのデフォルト公開を無効化（毎回実行）
-echo "Disabling public default for new projects..."
-bundle exec rails runner "
-  setting = Setting.where(name: 'default_projects_public').first_or_initialize
-  setting.value = '0'
-  setting.save
-  puts 'New projects will be private by default'
-" RAILS_ENV=development 2>/dev/null || true
+# 新規プロジェクトのデフォルト公開設定（環境変数で指定された場合のみ）
+if [ -n "$REDMINE_DEFAULT_PROJECTS_PUBLIC" ]; then
+    echo "Setting default projects public to: $REDMINE_DEFAULT_PROJECTS_PUBLIC"
+    bundle exec rails runner "
+      setting = Setting.where(name: 'default_projects_public').first_or_initialize
+      setting.value = '${REDMINE_DEFAULT_PROJECTS_PUBLIC}'
+      setting.save
+      puts 'Default projects public setting updated'
+    " RAILS_ENV=development 2>/dev/null || true
+fi
 
 # Redmine起動
 echo "Starting Redmine on http://localhost:3000"
