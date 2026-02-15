@@ -85,7 +85,7 @@ fi
 # データベース初期化
 echo "Initializing database..."
 bundle exec rake db:migrate RAILS_ENV=development
-bundle exec rake redmine:load_default_data REDMINE_LANG=ja RAILS_ENV=development
+bundle exec rake redmine:load_default_data REDMINE_LANG=${REDMINE_LANG:-ja} RAILS_ENV=development
 
 # プラグインマイグレーション
 if [ -n "$(ls -A plugins 2>/dev/null)" ]; then
@@ -103,4 +103,13 @@ bundle exec rails runner "
   u.must_change_passwd = false
   u.save(validate: false)
   puts 'Admin password configured'
+" RAILS_ENV=development
+
+# デフォルト言語設定
+echo "Setting default language to ${REDMINE_LANG:-ja}..."
+bundle exec rails runner "
+  setting = Setting.where(name: 'default_language').first_or_initialize
+  setting.value = '${REDMINE_LANG:-ja}'
+  setting.save
+  puts 'Default language configured'
 " RAILS_ENV=development

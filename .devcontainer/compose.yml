@@ -15,6 +15,7 @@ services:
       DB_HOST: db
       DB_USER: redmine
       DB_PASSWORD: redmine
+      REDMINE_LANG: ja
       # REDMINE_ADMIN_PASSWORD: your_secure_password
       REDMINE_REST_API_ENABLED: "true"  # Set to "true" to enable REST API
       REDMINE_DEFAULT_PROJECTS_PUBLIC: "0"  # Set to "1" for public, "0" for private

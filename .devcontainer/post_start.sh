@@ -30,12 +30,10 @@ bundle exec rails runner "
 if [ "$REDMINE_REST_API_ENABLED" = "true" ]; then
     echo "Enabling REST API..."
     bundle exec rails runner "
-      setting = Setting.find_by(name: 'rest_api_enabled')
-      if setting
-        setting.value = '1'
-        setting.save
-        puts 'REST API enabled'
-      end
+      setting = Setting.where(name: 'rest_api_enabled').first_or_initialize
+      setting.value = '1'
+      setting.save
+      puts 'REST API enabled'
     " RAILS_ENV=development 2>/dev/null || true
 fi
 
